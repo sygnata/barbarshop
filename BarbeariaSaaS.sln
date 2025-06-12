@@ -3,21 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barbearia.Domain", "Barbearia.Domain\Barbearia.Domain.csproj", "{5D23E4A1-110A-46E1-BCB7-EA09A667319E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barbearia.Domain", "Barbearia.Domain\Barbearia.Domain.csproj", "{5D23E4A1-110A-46E1-BCB7-EA09A667319E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barbearia.Application", "Barbearia.Application\Barbearia.Application.csproj", "{1B4347B1-4DA4-414B-955E-D52F729B5E35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barbearia.Application", "Barbearia.Application\Barbearia.Application.csproj", "{1B4347B1-4DA4-414B-955E-D52F729B5E35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barbearia.Infrastructure", "Barbearia.Infrastructure\Barbearia.Infrastructure.csproj", "{2D944D45-E1A0-4B92-92A4-BF7ABBC0E7AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barbearia.Infrastructure", "Barbearia.Infrastructure\Barbearia.Infrastructure.csproj", "{2D944D45-E1A0-4B92-92A4-BF7ABBC0E7AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barbearia.WebAPI", "Barbearia.WebAPI\Barbearia.WebAPI.csproj", "{0B9497B1-C893-4646-9BD9-E0195243BBF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barbearia.WebAPI", "Barbearia.WebAPI\Barbearia.WebAPI.csproj", "{0B9497B1-C893-4646-9BD9-E0195243BBF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barbearia.DependencyInjection", "Barbearia.DependencyInjection\Barbearia.DependencyInjection.csproj", "{E3BCB7F6-FA7F-4446-A828-C433F52B5C12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5D23E4A1-110A-46E1-BCB7-EA09A667319E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +35,15 @@ Global
 		{0B9497B1-C893-4646-9BD9-E0195243BBF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B9497B1-C893-4646-9BD9-E0195243BBF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B9497B1-C893-4646-9BD9-E0195243BBF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3BCB7F6-FA7F-4446-A828-C433F52B5C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BCB7F6-FA7F-4446-A828-C433F52B5C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BCB7F6-FA7F-4446-A828-C433F52B5C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BCB7F6-FA7F-4446-A828-C433F52B5C12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3794121-597D-4238-94F0-6EEC415E4C77}
 	EndGlobalSection
 EndGlobal
