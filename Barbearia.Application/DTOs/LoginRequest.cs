@@ -8,6 +8,7 @@ namespace Barbearia.Application.DTOs
 {
     public class LoginRequest
     {
+        public Guid TenantId { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
     }

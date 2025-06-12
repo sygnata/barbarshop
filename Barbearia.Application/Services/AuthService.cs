@@ -19,9 +19,9 @@ namespace Barbearia.Application.Services
             _configuration = configuration;
         }
 
-        public string Login(string email, string senha)
+        public string Login(Guid tenantId, string email, string senha)
         {
-            var user = _context.Usuarios.FirstOrDefault(u => u.Email == email);
+            var user = _context.Usuarios.FirstOrDefault(u => u.Email == email && u.TenantId == tenantId);
             if (user == null || user.SenhaHash != senha)
                 return null;
 

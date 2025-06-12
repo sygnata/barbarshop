@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        var token = _authService.Login(request.Email, request.Senha);
+        var token = _authService.Login(request.TenantId, request.Email, request.Senha);
         if (token == null)
             return Unauthorized();
         return Ok(new LoginResponse { Token = token });

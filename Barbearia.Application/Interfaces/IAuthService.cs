@@ -8,6 +8,6 @@ namespace Barbearia.Application.Interfaces
 {
 	public interface IAuthService
 	{
-		string Login(string email, string senha);
+		string Login(Guid tenantId, string email, string senha);
 	}
 }
