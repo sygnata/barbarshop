@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Barbearia.Application.DTOs
 {
-    public class LoginRequest
+    public class CreateTenantResponse
     {
         public Guid TenantId { get; set; }
-        public string Email { get; set; }
-        public string Senha { get; set; }
+        public Guid UsuarioAdminId { get; set; }
     }
 }

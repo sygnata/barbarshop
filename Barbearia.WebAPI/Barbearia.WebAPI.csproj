@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Barbearia.Application\Barbearia.Application.csproj" />
     <ProjectReference Include="..\Barbearia.Infrastructure\Barbearia.Infrastructure.csproj" />
     <ProjectReference Include="..\Barbearia.Domain\Barbearia.Domain.csproj" />
+    <ProjectReference Include="..\Barbearia.DependencyInjection\Barbearia.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>
