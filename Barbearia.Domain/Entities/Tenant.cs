@@ -10,9 +10,9 @@ namespace Barbearia.Domain.Entities
     {
         public Guid Id { get; set; }
         public string NomeFantasia { get; set; }
-        public string LogoUrl { get; set; }
-        public string CorPrimaria { get; set; }
-        public string DominioCustomizado { get; set; }
+        public string? LogoUrl { get; set; }
+        public string? CorPrimaria { get; set; }
+        public string? DominioCustomizado { get; set; }
         public DateTime DataCriacao { get; set; }
     }
 }
