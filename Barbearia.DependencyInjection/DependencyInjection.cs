@@ -10,6 +10,8 @@ namespace DependencyInjection
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITenantService, TenantService>();
+            services.AddScoped<IServicoService, ServicoService>();
+
             return services;
         }
     }

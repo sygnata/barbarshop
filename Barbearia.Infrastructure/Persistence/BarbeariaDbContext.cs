@@ -19,5 +19,15 @@ namespace Barbearia.Infrastructure.Persistence
         public DbSet<Agendamento> Agendamentos { get; set; }
 
         public BarbeariaDbContext(DbContextOptions<BarbeariaDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => new { u.TenantId, u.Email })
+                .IsUnique();
+        }
     }
+
 }
