@@ -75,6 +75,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 app.UseWhen(context => context.User.Identity.IsAuthenticated, appBuilder =>
 {

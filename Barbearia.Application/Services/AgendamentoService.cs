@@ -1,6 +1,7 @@
 ﻿using Barbearia.Application.DTOs.Agendamento;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Infrastructure.Exceptions;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
@@ -24,7 +25,7 @@ namespace Barbearia.Application.Services
 
             if (existeConflito)
             {
-                throw new InvalidOperationException("Já existe um agendamento para este barbeiro neste horário.");
+                throw new BusinessException("Já existe um agendamento para este barbeiro neste horário.");
             }
 
             // 2️⃣ Validação: verificar se o horário solicitado está dentro do horário disponível configurado
@@ -39,7 +40,7 @@ namespace Barbearia.Application.Services
 
             if (!dentroDisponibilidade)
             {
-                throw new InvalidOperationException("O horário solicitado não está dentro da disponibilidade configurada para o barbeiro.");
+                throw new BusinessException("O horário solicitado não está dentro da disponibilidade configurada para o barbeiro.");
             }
 
             var agendamento = new Agendamento
