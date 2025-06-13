@@ -12,7 +12,8 @@ namespace DependencyInjection
             services.AddScoped<ITenantService, TenantService>();
             services.AddScoped<IServicoService, ServicoService>();
             services.AddScoped<IBarbeiroService, BarbeiroService>();
-
+            services.AddScoped<IAgendamentoService, AgendamentoService>();
+            services.AddScoped<IHorarioDisponivelService, HorarioDisponivelService>();
             return services;
         }
     }
