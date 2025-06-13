@@ -1,4 +1,6 @@
-﻿namespace Barbearia.Domain.Entities
+﻿using Barbearia.Domain.Entities.Enums;
+
+namespace Barbearia.Domain.Entities
 {
 	public class Agendamento
     {
@@ -9,6 +11,6 @@
         public DateTime DataHoraAgendada { get; set; }
         public string ClienteNome { get; set; }
         public string ClienteTelefone { get; set; }
-        public string Status { get; set; } // AGENDADO, CANCELADO, CONCLUIDO
+        public AgendamentoStatus Status { get; set; } // AGENDADO, CANCELADO, CONCLUIDO
     }
 }

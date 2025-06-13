@@ -1,7 +1,10 @@
 ﻿using Barbearia.Application.DTOs.Agendamento;
+using Barbearia.Application.DTOs.Status;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Entities.Enums;
 using Barbearia.Infrastructure.Exceptions;
+using Barbearia.Infrastructure.Helpers;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
@@ -17,18 +20,18 @@ namespace Barbearia.Application.Services
 
         public AgendamentoResponse Agendar(Guid tenantId, AgendamentoRequest request)
         {
-            // 1️⃣ Validação: impedir conflito de horário para o barbeiro
+            var dataHoraNormalizada = request.DataHora.ToUniversalTime();
+
             bool existeConflito = _context.Agendamentos.Any(a =>
                 a.TenantId == tenantId &&
                 a.BarbeiroId == request.BarbeiroId &&
-                a.DataHoraAgendada == request.DataHora);
+                a.DataHoraAgendada == dataHoraNormalizada);
 
             if (existeConflito)
             {
                 throw new BusinessException("Já existe um agendamento para este barbeiro neste horário.");
             }
 
-            // 2️⃣ Validação: verificar se o horário solicitado está dentro do horário disponível configurado
             var diaSemana = (int)request.DataHora.DayOfWeek;
             var hora = request.DataHora.TimeOfDay;
 
@@ -49,10 +52,10 @@ namespace Barbearia.Application.Services
                 TenantId = tenantId,
                 ServicoId = request.ServicoId,
                 BarbeiroId = request.BarbeiroId,
-                DataHoraAgendada = request.DataHora,
+                DataHoraAgendada = dataHoraNormalizada,
                 ClienteNome = request.NomeCliente,
                 ClienteTelefone = request.TelefoneCliente,
-                Status = "Agendado"
+                Status = AgendamentoStatus.Agendado
             };
 
             _context.Agendamentos.Add(agendamento);
@@ -67,6 +70,17 @@ namespace Barbearia.Application.Services
                 NomeCliente = agendamento.ClienteNome,
                 TelefoneCliente = agendamento.ClienteTelefone
             };
+        }
+
+        public void AlterarStatus(Guid tenantId, AlterarStatusRequest request)
+        {
+            var agendamento = _context.Agendamentos.FirstOrDefault(a => a.Id == request.AgendamentoId && a.TenantId == tenantId);
+
+            if (agendamento == null)
+                throw new BusinessException("Agendamento não encontrado.");
+
+            agendamento.Status = (AgendamentoStatus)request.NovoStatus;
+            _context.SaveChanges();
         }
 
         public IEnumerable<AgendamentoResponse> ListarAgendamentos(Guid tenantId)

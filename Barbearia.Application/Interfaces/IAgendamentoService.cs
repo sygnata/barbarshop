@@ -1,4 +1,5 @@
 ﻿using Barbearia.Application.DTOs.Agendamento;
+using Barbearia.Application.DTOs.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Barbearia.Application.Interfaces
     {
         AgendamentoResponse Agendar(Guid tenantId, AgendamentoRequest request);
         IEnumerable<AgendamentoResponse> ListarAgendamentos(Guid tenantId);
+        void AlterarStatus(Guid tenantId, AlterarStatusRequest request);
     }
 }
