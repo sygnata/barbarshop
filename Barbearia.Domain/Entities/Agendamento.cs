@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Barbearia.Domain.Entities
+﻿namespace Barbearia.Domain.Entities
 {
-    public class Agendamento
+	public class Agendamento
     {
         public Guid Id { get; set; }
         public Guid TenantId { get; set; }

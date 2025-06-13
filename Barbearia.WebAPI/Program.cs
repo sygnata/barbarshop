@@ -1,4 +1,5 @@
 using Barbearia.Infrastructure.Persistence;
+using Barbearia.Infrastructure.Serializers;
 using Barbearia.WebAPI.Middlewares;
 using DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,7 +15,12 @@ builder.Services.AddDbContext<BarbeariaDbContext>(options =>
 
 builder.Services.AddApplicationServices();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new TimeSpanConverter());
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -44,6 +50,8 @@ builder.Services.AddSwaggerGen(c =>
             new string[] {}
         }
     });
+
+    c.SchemaFilter<TimeSpanSchemaFilter>();
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
