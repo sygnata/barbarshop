@@ -4,7 +4,6 @@ using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
 using Barbearia.Domain.Entities.Enums;
 using Barbearia.Infrastructure.Exceptions;
-using Barbearia.Infrastructure.Helpers;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
@@ -22,28 +21,42 @@ namespace Barbearia.Application.Services
         {
             var dataHoraNormalizada = request.DataHora.ToUniversalTime();
 
+            // Buscar a duração do serviço informado
+            var servico = _context.Servicos.FirstOrDefault(s => s.Id == request.ServicoId && s.TenantId == tenantId);
+            if (servico == null)
+                throw new BusinessException("Serviço informado não encontrado.");
+
+            var dataHoraFim = dataHoraNormalizada.AddMinutes(servico.DuracaoMinutos);
+
+            // Validação 1 - Conflito de agendamento considerando duração
             bool existeConflito = _context.Agendamentos.Any(a =>
                 a.TenantId == tenantId &&
                 a.BarbeiroId == request.BarbeiroId &&
-                a.DataHoraAgendada == dataHoraNormalizada);
+                a.Status == AgendamentoStatus.Agendado &&
+                (dataHoraNormalizada < a.DataHoraAgendada.AddMinutes(
+                    _context.Servicos.Where(s => s.Id == a.ServicoId).Select(s => s.DuracaoMinutos).FirstOrDefault()) &&
+                 dataHoraFim > a.DataHoraAgendada)
+            );
 
             if (existeConflito)
             {
-                throw new BusinessException("Já existe um agendamento para este barbeiro neste horário.");
+                throw new BusinessException("Já existe um agendamento conflitando com este horário.");
             }
 
             var diaSemana = (int)request.DataHora.DayOfWeek;
-            var hora = request.DataHora.TimeOfDay;
+            var horaInicio = request.DataHora.TimeOfDay;
+            var horaFim = horaInicio.Add(TimeSpan.FromMinutes(servico.DuracaoMinutos));
 
+            // Validação 2 - Não ultrapassar disponibilidade do barbeiro
             bool dentroDisponibilidade = _context.HorariosDisponiveis.Any(h =>
                 h.BarbeiroId == request.BarbeiroId &&
                 h.DiaSemana == diaSemana &&
-                h.HoraInicio <= hora &&
-                h.HoraFim >= hora);
+                h.HoraInicio <= horaInicio &&
+                h.HoraFim >= horaFim);
 
             if (!dentroDisponibilidade)
             {
-                throw new BusinessException("O horário solicitado não está dentro da disponibilidade configurada para o barbeiro.");
+                throw new BusinessException("O horário solicitado não está disponível dentro da jornada do barbeiro.");
             }
 
             var agendamento = new Agendamento
