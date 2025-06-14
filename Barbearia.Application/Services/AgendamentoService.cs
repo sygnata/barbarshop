@@ -3,6 +3,7 @@ using Barbearia.Application.DTOs.Status;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
 using Barbearia.Domain.Entities.Enums;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Exceptions;
 using Barbearia.Infrastructure.Persistence;
 
@@ -11,63 +12,37 @@ namespace Barbearia.Application.Services
 	public class AgendamentoService : IAgendamentoService
     {
         private readonly BarbeariaDbContext _context;
+        private readonly IAgendamentoRepository _agendamentoRepository;
 
-        public AgendamentoService(BarbeariaDbContext context)
+        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository)
         {
             _context = context;
+            _agendamentoRepository = agendamentoRepository;
         }
 
-        public AgendamentoResponse Agendar(Guid tenantId, AgendamentoRequest request)
+        public void Agendar(Guid tenantId, AgendamentoRequest request)
         {
             var dataHoraNormalizada = request.DataHora.ToUniversalTime();
 
-            // Regra 1 - Não permitir agendamento no passado ou muito em cima da hora
             if (dataHoraNormalizada < DateTime.UtcNow.AddMinutes(10))
                 throw new BusinessException("O horário deve ser com pelo menos 10 minutos de antecedência.");
 
-            // Buscar a duração do serviço informado
             var servico = _context.Servicos.FirstOrDefault(s => s.Id == request.ServicoId && s.TenantId == tenantId);
             if (servico == null)
-                throw new BusinessException("Serviço informado não encontrado.");
+                throw new BusinessException("Serviço não encontrado.");
 
             var dataHoraFim = dataHoraNormalizada.AddMinutes(servico.DuracaoMinutos);
 
-            // Regra 2 - Cliente não pode ter dois agendamentos no mesmo horário
-            bool clienteDuplicado = _context.Agendamentos.Any(a =>
-                a.TenantId == tenantId &&
-                a.ClienteTelefone == request.TelefoneCliente &&
-                a.DataHoraAgendada == dataHoraNormalizada &&
-                a.Status == AgendamentoStatus.Agendado);
-
-            if (clienteDuplicado)
+            if (_agendamentoRepository.ClientePossuiDuplicado(tenantId, request.TelefoneCliente, dataHoraNormalizada))
                 throw new BusinessException("Já existe um agendamento para este cliente neste horário.");
 
-            // Carrega todos os agendamentos ativos com duracao para este barbeiro
-            var agendamentosExistentes = (from a in _context.Agendamentos
-                                          join s in _context.Servicos on a.ServicoId equals s.Id
-                                          where a.TenantId == tenantId
-                                              && a.BarbeiroId == request.BarbeiroId
-                                              && a.Status == AgendamentoStatus.Agendado
-                                          select new
-                                          {
-                                              a.DataHoraAgendada,
-                                              Duracao = s.DuracaoMinutos
-                                          }).ToList();
-
-            bool existeConflito = agendamentosExistentes.Any(a =>
-                dataHoraNormalizada < a.DataHoraAgendada.AddMinutes(a.Duracao) &&
-                dataHoraFim > a.DataHoraAgendada);
-
-            if (existeConflito)
-            {
+            if (_agendamentoRepository.ExisteConflito(tenantId, request.BarbeiroId, dataHoraNormalizada, dataHoraFim))
                 throw new BusinessException("Já existe um agendamento conflitando com este horário.");
-            }
 
-            var diaSemana = (int)request.DataHora.DayOfWeek;
-            var horaInicio = request.DataHora.TimeOfDay;
+            var diaSemana = (int)dataHoraNormalizada.DayOfWeek;
+            var horaInicio = dataHoraNormalizada.TimeOfDay;
             var horaFim = horaInicio.Add(TimeSpan.FromMinutes(servico.DuracaoMinutos));
 
-            // Validação - Não ultrapassar disponibilidade do barbeiro
             bool dentroDisponibilidade = _context.HorariosDisponiveis.Any(h =>
                 h.BarbeiroId == request.BarbeiroId &&
                 h.DiaSemana == diaSemana &&
@@ -75,10 +50,9 @@ namespace Barbearia.Application.Services
                 h.HoraFim >= horaFim);
 
             if (!dentroDisponibilidade)
-            {
-                throw new BusinessException("O horário solicitado não está disponível dentro da jornada do barbeiro.");
-            }
+                throw new BusinessException("O horário solicitado não está dentro da jornada do barbeiro.");
 
+            //Utilizar AutoMapper
             var agendamento = new Agendamento
             {
                 Id = Guid.NewGuid(),
@@ -91,18 +65,13 @@ namespace Barbearia.Application.Services
                 Status = AgendamentoStatus.Agendado
             };
 
-            _context.Agendamentos.Add(agendamento);
-            _context.SaveChanges();
+            _agendamentoRepository.Adicionar(agendamento);
+            _agendamentoRepository.Salvar();
+        }
 
-            return new AgendamentoResponse
-            {
-                Id = agendamento.Id,
-                ServicoId = agendamento.ServicoId,
-                BarbeiroId = agendamento.BarbeiroId,
-                DataHora = agendamento.DataHoraAgendada,
-                NomeCliente = agendamento.ClienteNome,
-                TelefoneCliente = agendamento.ClienteTelefone
-            };
+        public IEnumerable<Agendamento> ListarPorTenant(Guid tenantId)
+        {
+            return _agendamentoRepository.ListarPorTenant(tenantId);
         }
 
         public IEnumerable<DateTime> ListarDisponibilidade(Guid tenantId, Guid barbeiroId, Guid servicoId, DateTime dataReferencia)
