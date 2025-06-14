@@ -5,23 +5,14 @@ using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
 {
-    public class AgendamentoRepository : IAgendamentoRepository
+    public class AgendamentoRepository : BaseRepository, IAgendamentoRepository
     {
-        private readonly BarbeariaDbContext _context;
 
-        public AgendamentoRepository(BarbeariaDbContext context)
-        {
-            _context = context;
-        }
+        public AgendamentoRepository(BarbeariaDbContext context) : base(context) { }
 
         public void Adicionar(Agendamento agendamento)
         {
             _context.Agendamentos.Add(agendamento);
-        }
-
-        public void Salvar()
-        {
-            _context.SaveChanges();
         }
 
         public IEnumerable<Agendamento> ListarPorTenant(Guid tenantId)

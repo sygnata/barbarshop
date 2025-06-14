@@ -4,14 +4,12 @@ using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
 {
-	public class HorarioDisponivelRepository : IHorarioDisponivelRepository
+	public class HorarioDisponivelRepository : BaseRepository, IHorarioDisponivelRepository
     {
         private readonly BarbeariaDbContext _context;
 
-        public HorarioDisponivelRepository(BarbeariaDbContext context)
-        {
-            _context = context;
-        }
+        public HorarioDisponivelRepository(BarbeariaDbContext context) : base(context) { }
+
 
         public HorarioDisponivel? ObterPorBarbeiroDia(Guid barbeiroId, int diaSemana)
         {

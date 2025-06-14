@@ -1,17 +1,19 @@
 ﻿using Barbearia.Application.DTOs.Servico;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
 	public class ServicoService : IServicoService
     {
-        private readonly BarbeariaDbContext _context;
+        private readonly IServicoRepository _servicoRepository;
 
-        public ServicoService(BarbeariaDbContext context)
+
+        public ServicoService(IServicoRepository servicoRepository)
         {
-            _context = context;
+            _servicoRepository = servicoRepository;
         }
 
         public ServicoResponse AdicionarServico(Guid tenantId, ServicoRequest request)
@@ -26,8 +28,8 @@ namespace Barbearia.Application.Services
                 Preco = request.Preco
             };
 
-            _context.Servicos.Add(servico);
-            _context.SaveChanges();
+            _servicoRepository.Adicionar(servico);
+            _servicoRepository.Salvar();
 
             return new ServicoResponse
             {
@@ -41,8 +43,7 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<ServicoResponse> ListarServicos(Guid tenantId)
         {
-            return _context.Servicos
-                .Where(s => s.TenantId == tenantId)
+            var servicos =  _servicoRepository.ListarServicosPorTenant(tenantId)
                 .Select(s => new ServicoResponse
                 {
                     Id = s.Id,
@@ -50,7 +51,9 @@ namespace Barbearia.Application.Services
                     Descricao = s.Descricao,
                     DuracaoMinutos = s.DuracaoMinutos,
                     Preco = s.Preco
-                }).ToList();
+                })
+                .ToList();
+            return servicos;
         }
     }
 }

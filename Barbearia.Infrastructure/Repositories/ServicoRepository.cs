@@ -4,18 +4,24 @@ using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
 {
-	public class ServicoRepository : IServicoRepository
+	public class ServicoRepository : BaseRepository, IServicoRepository
     {
-        private readonly BarbeariaDbContext _context;
+        public ServicoRepository(BarbeariaDbContext context) : base(context) { }
 
-        public ServicoRepository(BarbeariaDbContext context)
+        public void Adicionar(Servico servico)
         {
-            _context = context;
+            _context.Servicos.Add(servico);
         }
 
         public Servico? ObterPorId(Guid tenantId, Guid servicoId)
         {
             return _context.Servicos.FirstOrDefault(s => s.Id == servicoId && s.TenantId == tenantId);
+        }
+        public IEnumerable<Servico> ListarServicosPorTenant(Guid tenantId)
+        {
+            return _context.Servicos
+           .Where(s => s.TenantId == tenantId)
+           .ToList();
         }
     }
 }
