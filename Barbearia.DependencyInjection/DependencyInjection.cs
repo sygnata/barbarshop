@@ -22,6 +22,7 @@ namespace DependencyInjection
 
 			#region REPOSITORIES
 			services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+			services.AddScoped<IServicoRepository, ServicoRepository>();
 			#endregion
 
 			#region PROVIDERS

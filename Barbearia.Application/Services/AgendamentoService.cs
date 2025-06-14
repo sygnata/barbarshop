@@ -13,11 +13,13 @@ namespace Barbearia.Application.Services
     {
         private readonly BarbeariaDbContext _context;
         private readonly IAgendamentoRepository _agendamentoRepository;
+        private readonly IServicoRepository _servicoRepository;
 
-        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository)
+        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository)
         {
-            _context = context;
+            _context               = context;
             _agendamentoRepository = agendamentoRepository;
+            _servicoRepository     = servicoRepository;
         }
 
         public void Agendar(Guid tenantId, AgendamentoRequest request)
@@ -27,7 +29,7 @@ namespace Barbearia.Application.Services
             if (dataHoraNormalizada < DateTime.UtcNow.AddMinutes(10))
                 throw new BusinessException("O horário deve ser com pelo menos 10 minutos de antecedência.");
 
-            var servico = _context.Servicos.FirstOrDefault(s => s.Id == request.ServicoId && s.TenantId == tenantId);
+            var servico = _servicoRepository.ObterPorId(tenantId, request.ServicoId);
             if (servico == null)
                 throw new BusinessException("Serviço não encontrado.");
 
@@ -76,7 +78,7 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<DateTime> ListarDisponibilidade(Guid tenantId, Guid barbeiroId, Guid servicoId, DateTime dataReferencia)
         {
-            var servico = _context.Servicos.FirstOrDefault(s => s.Id == servicoId && s.TenantId == tenantId);
+            var servico = _servicoRepository.ObterPorId(tenantId, servicoId);
             if (servico == null)
                 throw new BusinessException("Serviço não encontrado.");
 
