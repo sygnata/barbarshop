@@ -54,6 +54,23 @@ namespace Barbearia.Infrastructure.Repositories
                     dataHoraInicio < a.DataHoraAgendada.AddMinutes(a.Duracao)
                     && dataHoraFim > a.DataHoraAgendada);
         }
+
+        public Agendamento? BuscarDisponivel(Guid agendamentoId, Guid tenantId)
+        {
+            return _context.Agendamentos.FirstOrDefault(a => a.Id == agendamentoId && a.TenantId == tenantId);
+
+        }
+        public IEnumerable<(DateTime DataHoraAgendada, int DuracaoMinutos)> ObterAgendamentosComServico(Guid tenantId, Guid barbeiroId, DateTime dataReferencia)
+        {
+            return (from a in _context.Agendamentos
+                    join s in _context.Servicos on a.ServicoId equals s.Id
+                    where a.TenantId == tenantId
+                          && a.BarbeiroId == barbeiroId
+                          && a.Status == AgendamentoStatus.Agendado
+                          && a.DataHoraAgendada.Date == dataReferencia.Date
+                    select new ValueTuple<DateTime, int>(a.DataHoraAgendada, s.DuracaoMinutos))
+                .ToList();
+        }
     }
 
 

@@ -11,14 +11,12 @@ namespace Barbearia.Application.Services
 {
 	public class AgendamentoService : IAgendamentoService
     {
-        private readonly BarbeariaDbContext _context;
         private readonly IAgendamentoRepository _agendamentoRepository;
         private readonly IServicoRepository _servicoRepository;
         private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
 
-        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository)
+        public AgendamentoService(IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository)
         {
-            _context                     = context;
             _agendamentoRepository       = agendamentoRepository;
             _servicoRepository           = servicoRepository;
             _horarioDisponivelRepository = horarioDisponivelRepository;
@@ -72,11 +70,6 @@ namespace Barbearia.Application.Services
             _agendamentoRepository.Salvar();
         }
 
-        public IEnumerable<Agendamento> ListarPorTenant(Guid tenantId)
-        {
-            return _agendamentoRepository.ListarPorTenant(tenantId);
-        }
-
         public IEnumerable<DateTime> ListarDisponibilidade(Guid tenantId, Guid barbeiroId, Guid servicoId, DateTime dataReferencia)
         {
             var servico = _servicoRepository.ObterPorId(tenantId, servicoId);
@@ -84,40 +77,25 @@ namespace Barbearia.Application.Services
                 throw new BusinessException("Serviço não encontrado.");
 
             var diaSemana = (int)dataReferencia.DayOfWeek;
-            var disponibilidade = _context.HorariosDisponiveis.FirstOrDefault(h =>
-                h.BarbeiroId == barbeiroId &&
-                h.DiaSemana == diaSemana);
+            var disponibilidade = _horarioDisponivelRepository.ObterPorBarbeiroDia(barbeiroId, diaSemana);
 
             if (disponibilidade == null)
                 return Enumerable.Empty<DateTime>();
 
-            var agendamentos = (from a in _context.Agendamentos
-                                join s in _context.Servicos on a.ServicoId equals s.Id
-                                where a.TenantId == tenantId
-                                    && a.BarbeiroId == barbeiroId
-                                    && a.Status == AgendamentoStatus.Agendado
-                                    && a.DataHoraAgendada.Date == dataReferencia.Date
-                                select new
-                                {
-                                    a.DataHoraAgendada,
-                                    Duracao = s.DuracaoMinutos
-                                }).ToList();
+            var agendamentos = _agendamentoRepository.ObterAgendamentosComServico(tenantId, barbeiroId, dataReferencia);
 
             var horariosDisponiveis = new List<DateTime>();
             var inicio = dataReferencia.Date.Add(disponibilidade.HoraInicio);
             var fim = dataReferencia.Date.Add(disponibilidade.HoraFim);
-
             for (var hora = inicio; hora.AddMinutes(servico.DuracaoMinutos) <= fim; hora = hora.AddMinutes(20))
             {
                 var horaFim = hora.AddMinutes(servico.DuracaoMinutos);
                 var conflito = agendamentos.Any(a =>
-                    hora < a.DataHoraAgendada.AddMinutes(a.Duracao) &&
+                    hora < a.DataHoraAgendada.AddMinutes(a.DuracaoMinutos) &&
                     horaFim > a.DataHoraAgendada);
 
                 if (!conflito)
-                {
                     horariosDisponiveis.Add(hora);
-                }
             }
 
             return horariosDisponiveis;
@@ -125,28 +103,29 @@ namespace Barbearia.Application.Services
 
         public void AlterarStatus(Guid tenantId, AlterarStatusRequest request)
         {
-            var agendamento = _context.Agendamentos.FirstOrDefault(a => a.Id == request.AgendamentoId && a.TenantId == tenantId);
-
+            var agendamento = _agendamentoRepository.BuscarDisponivel(request.AgendamentoId, tenantId);
             if (agendamento == null)
                 throw new BusinessException("Agendamento não encontrado.");
 
             agendamento.Status = (AgendamentoStatus)request.NovoStatus;
-            _context.SaveChanges();
+            _agendamentoRepository.Salvar();
         }
 
         public IEnumerable<AgendamentoResponse> ListarAgendamentos(Guid tenantId)
         {
-            return _context.Agendamentos
-                .Where(a => a.TenantId == tenantId)
-                .Select(a => new AgendamentoResponse
-                {
-                    Id = a.Id,
-                    ServicoId = a.ServicoId,
-                    BarbeiroId = a.BarbeiroId,
-                    DataHora = a.DataHoraAgendada,
-                    NomeCliente = a.ClienteNome,
-                    TelefoneCliente = a.ClienteTelefone
-                }).ToList();
+            var agendamentos = _agendamentoRepository.ListarPorTenant(tenantId);
+            return agendamentos.Select(a => new AgendamentoResponse
+            {
+                Id = a.Id,
+                ServicoId = a.ServicoId,
+                BarbeiroId = a.BarbeiroId,
+                DataHora = a.DataHoraAgendada,
+                NomeCliente = a.ClienteNome,
+                TelefoneCliente = a.ClienteTelefone
+            }).ToList();
+
+
+
         }
     }
 
