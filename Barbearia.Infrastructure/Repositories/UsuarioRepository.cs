@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Barbearia.Infrastructure.Repositories
 {
-    public class UsuarioRepository : BaseRepository, IUsuarioRepository
+    public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     {
         public UsuarioRepository(BarbeariaDbContext context) : base(context) { }
 

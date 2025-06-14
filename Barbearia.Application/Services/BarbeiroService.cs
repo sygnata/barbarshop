@@ -1,22 +1,20 @@
 ﻿using Barbearia.Application.DTOs.Barbeiro;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Barbearia.Application.Services
 {
-    public class BarbeiroService : IBarbeiroService
+	public class BarbeiroService : IBarbeiroService
     {
         private readonly BarbeariaDbContext _context;
+        private readonly IBarbeiroRepository _barbeiroRepository;
 
-        public BarbeiroService(BarbeariaDbContext context)
+        public BarbeiroService(BarbeariaDbContext context, IBarbeiroRepository barbeiroRepository)
         {
             _context = context;
+            _barbeiroRepository = barbeiroRepository;
         }
 
         public BarbeiroResponse AdicionarBarbeiro(Guid tenantId, BarbeiroRequest request)
@@ -27,9 +25,8 @@ namespace Barbearia.Application.Services
                 TenantId = tenantId,
                 Nome = request.Nome,
             };
-
-            _context.Barbeiros.Add(barbeiro);
-            _context.SaveChanges();
+            _barbeiroRepository.Adicionar(barbeiro);
+            _barbeiroRepository.Salvar();
 
             return new BarbeiroResponse
             {
@@ -40,13 +37,14 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<BarbeiroResponse> ListarBarbeiros(Guid tenantId)
         {
-            return _context.Barbeiros
-                .Where(b => b.TenantId == tenantId)
+            var barbeiro = _barbeiroRepository.ListarBarbeiros(tenantId)
                 .Select(b => new BarbeiroResponse
                 {
                     Id = b.Id,
                     Nome = b.Nome
                 }).ToList();
+
+            return barbeiro;
         }
     }
 }

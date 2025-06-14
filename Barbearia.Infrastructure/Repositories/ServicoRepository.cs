@@ -4,14 +4,9 @@ using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
 {
-	public class ServicoRepository : BaseRepository, IServicoRepository
+	public class ServicoRepository : BaseRepository<Servico>, IServicoRepository
     {
         public ServicoRepository(BarbeariaDbContext context) : base(context) { }
-
-        public void Adicionar(Servico servico)
-        {
-            _context.Servicos.Add(servico);
-        }
 
         public Servico? ObterPorId(Guid tenantId, Guid servicoId)
         {

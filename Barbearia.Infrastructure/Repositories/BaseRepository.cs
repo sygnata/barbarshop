@@ -2,7 +2,7 @@
 
 namespace Barbearia.Infrastructure.Repositories
 {
-	public abstract class BaseRepository
+	public class BaseRepository<T> where T : class
     {
         protected readonly BarbeariaDbContext _context;
 
@@ -14,6 +14,11 @@ namespace Barbearia.Infrastructure.Repositories
         public void Salvar()
         {
             _context.SaveChanges();
+        }
+
+        public void Adicionar(T entity)
+        {
+            _context.Set<T>().Add(entity);
         }
     }
 }
