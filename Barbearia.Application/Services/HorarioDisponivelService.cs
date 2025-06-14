@@ -9,12 +9,10 @@ namespace Barbearia.Application.Services
 	public class HorarioDisponivelService : IHorarioDisponivelService
     {
         private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
-        private readonly BarbeariaDbContext _dbContext;
 
-        public HorarioDisponivelService(IHorarioDisponivelRepository horarioDisponivelRepository, BarbeariaDbContext dbContext)
+        public HorarioDisponivelService(IHorarioDisponivelRepository horarioDisponivelRepository)
         {
             _horarioDisponivelRepository = horarioDisponivelRepository;
-            _dbContext = dbContext; 
         }
 
         public HorarioDisponivelResponse Adicionar(Guid tenantId, HorarioDisponivelRequest request)

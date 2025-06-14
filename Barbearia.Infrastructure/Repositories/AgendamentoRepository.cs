@@ -46,7 +46,7 @@ namespace Barbearia.Infrastructure.Repositories
                     && dataHoraFim > a.DataHoraAgendada);
         }
 
-        public Agendamento? BuscarDisponivel(Guid agendamentoId, Guid tenantId)
+        public Agendamento? ObterPorId(Guid agendamentoId, Guid tenantId)
         {
             return _context.Agendamentos.FirstOrDefault(a => a.Id == agendamentoId && a.TenantId == tenantId);
 

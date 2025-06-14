@@ -103,7 +103,7 @@ namespace Barbearia.Application.Services
 
         public void AlterarStatus(Guid tenantId, AlterarStatusRequest request)
         {
-            var agendamento = _agendamentoRepository.BuscarDisponivel(request.AgendamentoId, tenantId);
+            var agendamento = _agendamentoRepository.ObterPorId(request.AgendamentoId, tenantId);
             if (agendamento == null)
                 throw new BusinessException("Agendamento não encontrado.");
 

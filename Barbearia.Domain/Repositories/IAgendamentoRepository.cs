@@ -9,7 +9,7 @@ namespace Barbearia.Domain.Repositories
         bool ExisteConflito(Guid tenantId, Guid barbeiroId, DateTime dataHoraInicio, DateTime dataHoraFim);
         bool ClientePossuiDuplicado(Guid tenantId, string telefoneCliente, DateTime dataHora);
         void Salvar();
-        Agendamento? BuscarDisponivel(Guid agendamentoId, Guid tenantId);
+        Agendamento? ObterPorId(Guid agendamentoId, Guid tenantId);
         IEnumerable<(DateTime DataHoraAgendada, int DuracaoMinutos)> ObterAgendamentosComServico(Guid tenantId, Guid barbeiroId, DateTime dataReferencia);
     }
 }
