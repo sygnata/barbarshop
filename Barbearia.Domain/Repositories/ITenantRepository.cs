@@ -2,10 +2,10 @@
 
 namespace Barbearia.Domain.Repositories
 {
-    public interface IUsuarioRepository
+    public interface ITenantRepository
     {
         void Salvar();
-        void Adicionar(Usuario usuario);
+        void Adicionar(Tenant tenant);
         Usuario? ObterPorId(Guid tenantId, string email);
     }
 }

@@ -1,25 +1,25 @@
 ﻿using Barbearia.Application.DTOs;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Barbearia.Application.Services
 {
-    public class TenantService : ITenantService
+	public class TenantService : ITenantService
     {
         private readonly BarbeariaDbContext _context;
+        private readonly ITenantRepository _tenantRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public TenantService(BarbeariaDbContext context)
-        {
-            _context = context;
-        }
+		public TenantService(BarbeariaDbContext context, ITenantRepository tenantRepository, IUsuarioRepository usuarioRepository)
+		{
+			_context = context;
+            _tenantRepository = tenantRepository;
+            _usuarioRepository = usuarioRepository;
+		}
 
-        public CreateTenantResponse CriarTenant(CreateTenantRequest request)
+		public CreateTenantResponse CriarTenant(CreateTenantRequest request)
         {
             var tenant = new Tenant
             {
@@ -38,9 +38,10 @@ namespace Barbearia.Application.Services
                 Perfil = "ADMIN"
             };
 
-            _context.Tenants.Add(tenant);
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            _tenantRepository.Adicionar(tenant);
+            _usuarioRepository.Adicionar(usuario);
+    
+            _tenantRepository.Salvar();
 
             return new CreateTenantResponse
             {

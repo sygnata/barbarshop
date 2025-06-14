@@ -26,6 +26,7 @@ namespace DependencyInjection
 			services.AddScoped<IHorarioDisponivelRepository, HorarioDisponivelRepository>();
 			services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 			services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
+			services.AddScoped<ITenantRepository, TenantRepository>();
 			#endregion
 
 			#region PROVIDERS
