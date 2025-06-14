@@ -14,12 +14,14 @@ namespace Barbearia.Application.Services
         private readonly BarbeariaDbContext _context;
         private readonly IAgendamentoRepository _agendamentoRepository;
         private readonly IServicoRepository _servicoRepository;
+        private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
 
-        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository)
+        public AgendamentoService(BarbeariaDbContext context, IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository)
         {
-            _context               = context;
-            _agendamentoRepository = agendamentoRepository;
-            _servicoRepository     = servicoRepository;
+            _context                     = context;
+            _agendamentoRepository       = agendamentoRepository;
+            _servicoRepository           = servicoRepository;
+            _horarioDisponivelRepository = horarioDisponivelRepository;
         }
 
         public void Agendar(Guid tenantId, AgendamentoRequest request)
@@ -42,16 +44,15 @@ namespace Barbearia.Application.Services
                 throw new BusinessException("Já existe um agendamento conflitando com este horário.");
 
             var diaSemana = (int)dataHoraNormalizada.DayOfWeek;
+           
+            var disponibilidade = _horarioDisponivelRepository.ObterPorBarbeiroDia(request.BarbeiroId, diaSemana);
+            
+            if (disponibilidade == null)
+                throw new BusinessException("O barbeiro não possui disponibilidade cadastrada para este dia.");
+
             var horaInicio = dataHoraNormalizada.TimeOfDay;
             var horaFim = horaInicio.Add(TimeSpan.FromMinutes(servico.DuracaoMinutos));
-
-            bool dentroDisponibilidade = _context.HorariosDisponiveis.Any(h =>
-                h.BarbeiroId == request.BarbeiroId &&
-                h.DiaSemana == diaSemana &&
-                h.HoraInicio <= horaInicio &&
-                h.HoraFim >= horaFim);
-
-            if (!dentroDisponibilidade)
+            if (horaInicio < disponibilidade.HoraInicio || horaFim > disponibilidade.HoraFim)
                 throw new BusinessException("O horário solicitado não está dentro da jornada do barbeiro.");
 
             //Utilizar AutoMapper
