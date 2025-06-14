@@ -8,15 +8,15 @@ namespace Barbearia.Application.Services
 {
 	public class TenantService : ITenantService
     {
-        private readonly BarbeariaDbContext _context;
         private readonly ITenantRepository _tenantRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-		public TenantService(BarbeariaDbContext context, ITenantRepository tenantRepository, IUsuarioRepository usuarioRepository)
+		public TenantService(ITenantRepository tenantRepository, IUsuarioRepository usuarioRepository, IUnitOfWork unitOfWork)
 		{
-			_context = context;
             _tenantRepository = tenantRepository;
             _usuarioRepository = usuarioRepository;
+            _unitOfWork = unitOfWork;
 		}
 
 		public CreateTenantResponse CriarTenant(CreateTenantRequest request)
@@ -40,8 +40,7 @@ namespace Barbearia.Application.Services
 
             _tenantRepository.Adicionar(tenant);
             _usuarioRepository.Adicionar(usuario);
-    
-            _tenantRepository.Salvar();
+            _unitOfWork.Commit();
 
             return new CreateTenantResponse
             {
