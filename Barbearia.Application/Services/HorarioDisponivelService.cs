@@ -1,17 +1,20 @@
 ﻿using Barbearia.Application.DTOs.HorarioDisponivel;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
 	public class HorarioDisponivelService : IHorarioDisponivelService
     {
-        private readonly BarbeariaDbContext _context;
+        private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
+        private readonly BarbeariaDbContext _dbContext;
 
-        public HorarioDisponivelService(BarbeariaDbContext context)
+        public HorarioDisponivelService(IHorarioDisponivelRepository horarioDisponivelRepository, BarbeariaDbContext dbContext)
         {
-            _context = context;
+            _horarioDisponivelRepository = horarioDisponivelRepository;
+            _dbContext = dbContext; 
         }
 
         public HorarioDisponivelResponse Adicionar(Guid tenantId, HorarioDisponivelRequest request)
@@ -25,8 +28,8 @@ namespace Barbearia.Application.Services
                 HoraFim = request.HoraFim
             };
 
-            _context.HorariosDisponiveis.Add(horario);
-            _context.SaveChanges();
+            _horarioDisponivelRepository.Adicionar(horario);
+            _horarioDisponivelRepository.Salvar();
 
             return new HorarioDisponivelResponse
             {
@@ -40,8 +43,7 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<HorarioDisponivelResponse> ListarPorBarbeiro(Guid tenantId, Guid barbeiroId)
         {
-            return _context.HorariosDisponiveis
-                .Where(h => h.BarbeiroId == barbeiroId)
+            var barbeiros =  _horarioDisponivelRepository.ListarPorBarbeiro(barbeiroId)
                 .Select(h => new HorarioDisponivelResponse
                 {
                     Id = h.Id,
@@ -50,6 +52,7 @@ namespace Barbearia.Application.Services
                     HoraInicio = h.HoraInicio,
                     HoraFim = h.HoraFim
                 }).ToList();
+            return barbeiros;
         }
     }
 
