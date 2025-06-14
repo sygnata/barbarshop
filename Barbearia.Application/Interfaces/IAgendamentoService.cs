@@ -13,5 +13,6 @@ namespace Barbearia.Application.Interfaces
         AgendamentoResponse Agendar(Guid tenantId, AgendamentoRequest request);
         IEnumerable<AgendamentoResponse> ListarAgendamentos(Guid tenantId);
         void AlterarStatus(Guid tenantId, AlterarStatusRequest request);
+        IEnumerable<DateTime> ListarDisponibilidade(Guid tenantId, Guid barbeiroId, Guid servicoId, DateTime dataReferencia);
     }
 }
