@@ -1,4 +1,5 @@
 ﻿using Barbearia.Application.Interfaces;
+using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -10,18 +11,18 @@ namespace Barbearia.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly BarbeariaDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public AuthService(BarbeariaDbContext context, IConfiguration configuration)
+        public AuthService(IConfiguration configuration, IUsuarioRepository usuarioRepository)
         {
-            _context = context;
             _configuration = configuration;
+            _usuarioRepository = usuarioRepository;
         }
 
         public string Login(Guid tenantId, string email, string senha)
         {
-            var user = _context.Usuarios.FirstOrDefault(u => u.Email == email && u.TenantId == tenantId);
+            var user = _usuarioRepository.ObterPorId(tenantId, email);
             if (user == null || user.SenhaHash != senha)
                 return null;
 

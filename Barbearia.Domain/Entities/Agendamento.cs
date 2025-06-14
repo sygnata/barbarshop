@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Barbearia.Domain.Entities.Enums;
 
 namespace Barbearia.Domain.Entities
 {
-    public class Agendamento
+	public class Agendamento
     {
         public Guid Id { get; set; }
         public Guid TenantId { get; set; }
@@ -15,6 +11,6 @@ namespace Barbearia.Domain.Entities
         public DateTime DataHoraAgendada { get; set; }
         public string ClienteNome { get; set; }
         public string ClienteTelefone { get; set; }
-        public string Status { get; set; } // AGENDADO, CANCELADO, CONCLUIDO
+        public AgendamentoStatus Status { get; set; } // AGENDADO, CANCELADO, CONCLUIDO
     }
 }

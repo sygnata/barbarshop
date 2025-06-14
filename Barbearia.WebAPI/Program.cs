@@ -1,4 +1,5 @@
 using Barbearia.Infrastructure.Persistence;
+using Barbearia.Infrastructure.Serializers;
 using Barbearia.WebAPI.Middlewares;
 using DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,14 +8,22 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BarbeariaDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddApplicationServices();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new TimeSpanConverter());
+        options.JsonSerializerOptions.Converters.Add(new DateTimeUtcConverter());
+    });
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -44,6 +53,8 @@ builder.Services.AddSwaggerGen(c =>
             new string[] {}
         }
     });
+
+    c.SchemaFilter<TimeSpanSchemaFilter>();
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -67,6 +78,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 app.UseWhen(context => context.User.Identity.IsAuthenticated, appBuilder =>
 {
