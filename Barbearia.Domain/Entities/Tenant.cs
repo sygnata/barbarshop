@@ -9,7 +9,7 @@ namespace Barbearia.Domain.Entities
     public class Tenant
     {
         public Guid Id { get; set; }
-        public string NomeFantasia { get; set; }
+        public string NomeFantasia { get; set; }//VALUEOBJECT
         public string? LogoUrl { get; set; }
         public string? CorPrimaria { get; set; }
         public string? DominioCustomizado { get; set; }

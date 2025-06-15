@@ -22,9 +22,9 @@ namespace Barbearia.Infrastructure.Persistence.Configurations
             builder.Property(a => a.Id)
                 .HasConversion(new ValueObjectConverter<BarbeiroId, Guid>(v => new BarbeiroId(v)))
                 .HasColumnName("Id");
-            builder.Property(a => a.TenantId)
-                .HasConversion(new ValueObjectConverter<TenantId, Guid>(v => new TenantId(v)))
-                .HasColumnName("TenantId");
+            //builder.Property(a => a.TenantId)
+            //    .HasConversion(new ValueObjectConverter<TenantId, Guid>(v => new TenantId(v)))
+            //    .HasColumnName("TenantId");
             builder.Property(a => a.Nome)
                 .HasConversion(new ValueObjectConverter<NomeBarbeiro, string>(v => new NomeBarbeiro(v)))
                 .HasColumnName("Nome");

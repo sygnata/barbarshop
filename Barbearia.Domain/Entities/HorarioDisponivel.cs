@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Barbearia.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Barbearia.Domain.Entities
     public class HorarioDisponivel
     {
         public Guid Id { get; set; }
-        public Guid BarbeiroId { get; set; }
+        public BarbeiroId BarbeiroId { get; set; }//VALUEOBJECT
         public int DiaSemana { get; set; } // 0=Domingo, 6=Sábado
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFim { get; set; }

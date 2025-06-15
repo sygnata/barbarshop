@@ -28,6 +28,7 @@ namespace Barbearia.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new AgendamentoConfiguration());
             modelBuilder.ApplyConfiguration(new BarbeiroConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
+            modelBuilder.ApplyConfiguration(new HorarioDisponivelConfiguration());
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties().Where(p => p.ClrType == typeof(DateTime)))

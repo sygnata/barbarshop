@@ -1,5 +1,6 @@
 ﻿using Barbearia.Domain.Entities;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
@@ -8,12 +9,12 @@ namespace Barbearia.Infrastructure.Repositories
     {
         public HorarioDisponivelRepository(BarbeariaDbContext context) : base(context) { }
 
-        public HorarioDisponivel? ObterPorBarbeiroDia(Guid barbeiroId, int diaSemana)
+        public HorarioDisponivel? ObterPorBarbeiroDia(BarbeiroId barbeiroId, int diaSemana)
         {
             return _context.HorariosDisponiveis.FirstOrDefault(h => h.BarbeiroId == barbeiroId && h.DiaSemana == diaSemana);
         }
 
-        public List<HorarioDisponivel> ListarPorBarbeiro(Guid barbeiroId)
+        public List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId)
         { 
             return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId).ToList();
 
