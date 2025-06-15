@@ -2,11 +2,9 @@
 
 namespace Barbearia.Domain.ValueObjects
 {
-	public record Email
+    public sealed record Email : ValueObject<string>
     {
-        public string Value { get; }
-
-        public Email(string value)
+        public Email(string value) : base(value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Email não pode ser vazio.");
@@ -16,7 +14,6 @@ namespace Barbearia.Domain.ValueObjects
             if (!Regex.IsMatch(value, pattern))
                 throw new ArgumentException("Formato de e-mail inválido.");
 
-            Value = value;
         }
 
         public static implicit operator string(Email email) => email.Value;

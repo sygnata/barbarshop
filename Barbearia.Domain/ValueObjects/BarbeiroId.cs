@@ -1,15 +1,11 @@
 ﻿namespace Barbearia.Domain.ValueObjects
 {
-	public record BarbeiroId
+	public sealed record BarbeiroId : ValueObject<Guid>
     {
-        public Guid Value { get; }
-
-        public BarbeiroId(Guid value)
+        public BarbeiroId(Guid value) : base(value)
         {
             if (value == Guid.Empty)
                 throw new ArgumentException("BarbeiroId não pode ser vazio.");
-
-            Value = value;
         }
 
         public static implicit operator Guid(BarbeiroId id) => id.Value;

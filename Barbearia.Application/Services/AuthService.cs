@@ -1,5 +1,6 @@
 ﻿using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +21,7 @@ namespace Barbearia.Application.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public string Login(Guid tenantId, string email, string senha)
+        public string Login(TenantId tenantId, string email, string senha)
         {
             var user = _usuarioRepository.ObterPorId(tenantId, email);
             if (user == null || user.SenhaHash != senha)
@@ -34,7 +35,7 @@ namespace Barbearia.Application.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("tenant_id", user.TenantId.ToString()),
+                new Claim("tenant_id", user.TenantId.Value.ToString()),
                 new Claim(ClaimTypes.Role, user.Perfil)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),

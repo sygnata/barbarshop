@@ -1,4 +1,6 @@
 ﻿using Barbearia.Domain.Entities;
+using Barbearia.Domain.ValueObjects;
+using Barbearia.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -23,6 +25,9 @@ namespace Barbearia.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new AgendamentoConfiguration());
+            modelBuilder.ApplyConfiguration(new BarbeiroConfiguration());
+            modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties().Where(p => p.ClrType == typeof(DateTime)))
@@ -33,13 +38,12 @@ namespace Barbearia.Infrastructure.Persistence
                 }
             }
 
-            modelBuilder.Entity<Agendamento>(builder =>
-            {
-                builder.OwnsOne(a => a.TenantId).Property(p => p.Value).HasColumnName("TenantId");
-                builder.OwnsOne(a => a.ServicoId).Property(p => p.Value).HasColumnName("ServicoId");
-                builder.OwnsOne(a => a.BarbeiroId).Property(p => p.Value).HasColumnName("BarbeiroId");
-                builder.OwnsOne(a => a.ClienteTelefone).Property(p => p.Value).HasColumnName("ClienteTelefone");
-            });
+
+            //modelBuilder.Entity<Usuario>(builder =>
+            //{
+            //    builder.Property(a => a.TenantId).HasConversion(v => v.Value, v => new TenantId(v)).HasColumnName("TenantId");
+            //});
+           
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Usuario>()
@@ -54,8 +58,6 @@ namespace Barbearia.Infrastructure.Persistence
                  .Property(a => a.DataHoraAgendada)
                  .HasColumnType("timestamp without time zone");
 
-
-          
         }
     }
 
