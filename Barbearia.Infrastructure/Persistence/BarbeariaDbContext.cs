@@ -33,6 +33,13 @@ namespace Barbearia.Infrastructure.Persistence
                 }
             }
 
+            modelBuilder.Entity<Agendamento>(builder =>
+            {
+                builder.OwnsOne(a => a.TenantId).Property(p => p.Value).HasColumnName("TenantId");
+                builder.OwnsOne(a => a.ServicoId).Property(p => p.Value).HasColumnName("ServicoId");
+                builder.OwnsOne(a => a.BarbeiroId).Property(p => p.Value).HasColumnName("BarbeiroId");
+                builder.OwnsOne(a => a.ClienteTelefone).Property(p => p.Value).HasColumnName("ClienteTelefone");
+            });
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Usuario>()
@@ -46,6 +53,7 @@ namespace Barbearia.Infrastructure.Persistence
             modelBuilder.Entity<Agendamento>()
                  .Property(a => a.DataHoraAgendada)
                  .HasColumnType("timestamp without time zone");
+
 
           
         }

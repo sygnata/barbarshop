@@ -2,7 +2,7 @@
 
 namespace Barbearia.Domain.ValueObjects
 {
-	public readonly struct Email
+	public record Email
     {
         public string Value { get; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Barbearia.Domain.ValueObjects
 {
-	public readonly struct TenantId
+	public record TenantId
     {
         public Guid Value { get; }
 

@@ -2,7 +2,7 @@
 
 namespace Barbearia.Domain.ValueObjects
 {
-	public readonly struct Telefone
+	public record Telefone
     {
         public string Value { get; }
 

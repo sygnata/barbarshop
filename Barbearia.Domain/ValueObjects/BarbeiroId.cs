@@ -1,6 +1,6 @@
 ﻿namespace Barbearia.Domain.ValueObjects
 {
-	public readonly struct BarbeiroId
+	public record BarbeiroId
     {
         public Guid Value { get; }
 
