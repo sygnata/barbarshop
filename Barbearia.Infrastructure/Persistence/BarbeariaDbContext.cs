@@ -26,13 +26,6 @@ namespace Barbearia.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AgendamentoConfiguration());
-            modelBuilder.ApplyConfiguration(new BarbeiroConfiguration());
-            modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
-            modelBuilder.ApplyConfiguration(new HorarioDisponivelConfiguration());
-            modelBuilder.ApplyConfiguration(new TenantConfiguration());
-            modelBuilder.ApplyConfiguration(new ServicoConfiguration());
-
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TenantConfiguration).Assembly);
 
             modelBuilder.ApplyValueObjectConversions();
@@ -49,11 +42,6 @@ namespace Barbearia.Infrastructure.Persistence
             }
 
 
-            //modelBuilder.Entity<Usuario>(builder =>
-            //{
-            //    builder.Property(a => a.TenantId).HasConversion(v => v.Value, v => new TenantId(v)).HasColumnName("TenantId");
-            //});
-           
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Usuario>()
@@ -67,7 +55,6 @@ namespace Barbearia.Infrastructure.Persistence
             modelBuilder.Entity<Agendamento>()
                  .Property(a => a.DataHoraAgendada)
                  .HasColumnType("timestamp without time zone");
-
         }
     }
 
