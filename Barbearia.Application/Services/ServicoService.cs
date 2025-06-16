@@ -44,8 +44,8 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<ServicoResponse> ListarServicos(Guid tenantId)
         {
-            var tenant = new TenantId(tenantId);
-            var servicos =  _servicoRepository.ListarServicosPorTenant(tenant)
+            //var tenant = new TenantId(tenantId);
+            var servicos =  _servicoRepository.ListarServicosPorTenant(tenantId)
                 .Select(s => new ServicoResponse
                 {
                     Id = s.Id,

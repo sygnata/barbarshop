@@ -1,6 +1,7 @@
 ﻿using Barbearia.Domain.Entities;
 using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence.Configurations;
+using Barbearia.Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -31,6 +32,12 @@ namespace Barbearia.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new HorarioDisponivelConfiguration());
             modelBuilder.ApplyConfiguration(new TenantConfiguration());
             modelBuilder.ApplyConfiguration(new ServicoConfiguration());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TenantConfiguration).Assembly);
+
+            modelBuilder.ApplyValueObjectConversions();
+
+
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties().Where(p => p.ClrType == typeof(DateTime)))

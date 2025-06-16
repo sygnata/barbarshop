@@ -49,14 +49,33 @@ namespace Barbearia.Infrastructure.Repositories
         }
         public IEnumerable<(DateTime DataHoraAgendada, int DuracaoMinutos)> ObterAgendamentosComServico(TenantId tenantId, BarbeiroId barbeiroId, DateTime dataReferencia)
         {
-            return (from a in _context.Agendamentos
-                    join s in _context.Servicos on a.ServicoId.Value equals s.Id
-                    where a.TenantId == tenantId
-                          && a.BarbeiroId == barbeiroId
-                          && a.Status == AgendamentoStatus.Agendado
-                          && a.DataHoraAgendada.Date == dataReferencia.Date
-                    select new ValueTuple<DateTime, int>(a.DataHoraAgendada, s.DuracaoMinutos))
+            //return (from a in _context.Agendamentos
+            //        join s in _context.Servicos on a.ServicoId.Value equals s.Id
+            //        where a.TenantId == tenantId
+            //              && a.BarbeiroId == barbeiroId
+            //              && a.Status == AgendamentoStatus.Agendado
+            //              && a.DataHoraAgendada.Date == dataReferencia.Date
+            //        select new ValueTuple<DateTime, int>(a.DataHoraAgendada, s.DuracaoMinutos))
+            //    .ToList();
+
+            var servicos = _context.Servicos.ToList();
+
+            var resultado = _context.Agendamentos
+                .Where(a =>
+                    a.TenantId == tenantId &&
+                    a.BarbeiroId == barbeiroId &&
+                    a.Status == AgendamentoStatus.Agendado &&
+                    a.DataHoraAgendada.Date == dataReferencia.Date
+                )
+                .AsEnumerable() // aqui força o LINQ rodar em memória (após vir do banco)
+                .Select(a =>
+                {
+                    var servico = servicos.FirstOrDefault(s => s.Id == a.ServicoId.Value);
+                    return (a.DataHoraAgendada, servico?.DuracaoMinutos ?? 0);
+                })
                 .ToList();
+
+            return resultado;
         }
     }
 

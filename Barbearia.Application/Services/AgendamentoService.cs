@@ -30,8 +30,8 @@ namespace Barbearia.Application.Services
             if (dataHoraNormalizada < DateTime.UtcNow.AddMinutes(10))
                 throw new BusinessException("O horário deve ser com pelo menos 10 minutos de antecedência.");
 
-            var tenant = new TenantId(tenantId);
-            var servico = _servicoRepository.ObterPorId(tenant, request.ServicoId);
+            //var tenant = new TenantId(tenantId);
+            var servico = _servicoRepository.ObterPorId(tenantId, request.ServicoId);
             if (servico == null)
                 throw new BusinessException("Serviço não encontrado.");
 
