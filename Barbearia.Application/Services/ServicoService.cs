@@ -2,6 +2,7 @@
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
@@ -43,7 +44,8 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<ServicoResponse> ListarServicos(Guid tenantId)
         {
-            var servicos =  _servicoRepository.ListarServicosPorTenant(tenantId)
+            var tenant = new TenantId(tenantId);
+            var servicos =  _servicoRepository.ListarServicosPorTenant(tenant)
                 .Select(s => new ServicoResponse
                 {
                     Id = s.Id,
