@@ -33,6 +33,7 @@ namespace DependencyInjection
 
 			#region FACTORIES
 			services.AddScoped<TenantFactory>();
+			services.AddScoped<AgendamentoFactory>();
 			#endregion
 			#region PROVIDERS
 			services.AddScoped<ITenantProvider, TenantProvider>();

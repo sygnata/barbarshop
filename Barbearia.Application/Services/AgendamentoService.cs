@@ -3,6 +3,7 @@ using Barbearia.Application.DTOs.Status;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
 using Barbearia.Domain.Entities.Enums;
+using Barbearia.Domain.Factories;
 using Barbearia.Domain.Repositories;
 using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Exceptions;
@@ -15,12 +16,14 @@ namespace Barbearia.Application.Services
         private readonly IAgendamentoRepository _agendamentoRepository;
         private readonly IServicoRepository _servicoRepository;
         private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
+        private readonly AgendamentoFactory _agendamentoFactory;
 
-        public AgendamentoService(IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository)
+        public AgendamentoService(IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository, AgendamentoFactory agendamentoFactory)
         {
             _agendamentoRepository       = agendamentoRepository;
             _servicoRepository           = servicoRepository;
             _horarioDisponivelRepository = horarioDisponivelRepository;
+            _agendamentoFactory = agendamentoFactory;
         }
 
         public void Agendar(Guid tenantId, AgendamentoRequest request)
@@ -56,17 +59,16 @@ namespace Barbearia.Application.Services
                 throw new BusinessException("O horário solicitado não está dentro da jornada do barbeiro.");
 
             //Utilizar AutoMapper
-            var agendamento = new Agendamento
-            {
-                Id = Guid.NewGuid(),
-                TenantId = tenantId,
-                ServicoId = request.ServicoId,
-                BarbeiroId = request.BarbeiroId,
-                DataHoraAgendada = dataHoraNormalizada,
-                ClienteNome = request.NomeCliente,
-                ClienteTelefone = request.TelefoneCliente,
-                Status = AgendamentoStatus.Agendado
-            };
+            var agendamento = _agendamentoFactory.CriarAgendamento(
+                tenantId,
+                request.ServicoId,
+                request.BarbeiroId,
+                dataHoraNormalizada,
+                request.NomeCliente,
+                request.TelefoneCliente,
+                AgendamentoStatus.Agendado
+                );
+           
 
             _agendamentoRepository.Adicionar(agendamento);
             _agendamentoRepository.Salvar();
