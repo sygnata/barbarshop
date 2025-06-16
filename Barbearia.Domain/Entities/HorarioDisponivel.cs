@@ -10,7 +10,7 @@ namespace Barbearia.Domain.Entities
     public class HorarioDisponivel
     {
         public Guid Id { get; set; }
-        public BarbeiroId BarbeiroId { get; set; }//VALUEOBJECT
+        public BarbeiroId BarbeiroId { get; set; }
         public int DiaSemana { get; set; } // 0=Domingo, 6=Sábado
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFim { get; set; }
