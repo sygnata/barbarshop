@@ -11,6 +11,7 @@ namespace Barbearia.Application.Configuration
             var mapperConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AgendamentoProfileMapper>();
+                cfg.AddProfile<BarbeiroProfileMapper>();
                 // aqui você pode adicionar outros profiles
             });
 

@@ -50,21 +50,6 @@ namespace Barbearia.Infrastructure.Repositories
                     dataHoraInicio < a.DataHoraAgendada.AddMinutes(a.Duracao) &&
                     dataHoraFim > a.DataHoraAgendada
                 );
-
-
-            //return (from a in _context.Agendamentos
-            //        join s in _context.Servicos on a.ServicoId.Value equals s.Id
-            //        where a.TenantId == tenantId
-            //              && a.BarbeiroId == barbeiroId
-            //              && a.Status == AgendamentoStatus.Agendado
-            //        select new
-            //        {
-            //            a.DataHoraAgendada,
-            //            Duracao = s.DuracaoMinutos
-            //        })
-            //    .Any(a =>
-            //        dataHoraInicio < a.DataHoraAgendada.AddMinutes(a.Duracao)
-            //        && dataHoraFim > a.DataHoraAgendada);
         }
 
         public Agendamento? ObterPorId(Guid agendamentoId, TenantId tenantId)
@@ -74,15 +59,6 @@ namespace Barbearia.Infrastructure.Repositories
         }
         public IEnumerable<(DateTime DataHoraAgendada, int DuracaoMinutos)> ObterAgendamentosComServico(TenantId tenantId, BarbeiroId barbeiroId, DateTime dataReferencia)
 		{
-			return (from a in _context.Agendamentos
-					join s in _context.Servicos on a.ServicoId.Value equals s.Id
-					where a.TenantId == tenantId
-						  && a.BarbeiroId == barbeiroId
-						  && a.Status == AgendamentoStatus.Agendado
-						  && a.DataHoraAgendada.Date == dataReferencia.Date
-					select new ValueTuple<DateTime, int>(a.DataHoraAgendada, s.DuracaoMinutos))
-				.ToList();
-
 			var servicos = _context.Servicos.ToList();
 
             var resultado = _context.Agendamentos

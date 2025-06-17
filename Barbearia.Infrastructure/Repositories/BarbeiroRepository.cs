@@ -14,6 +14,12 @@ namespace Barbearia.Infrastructure.Repositories
         {
             return _context.Barbeiros.Where(s => s.TenantId == tenantId).ToList();
         }
-      
+
+        public bool ExisteComMesmoNome(TenantId tenantId, NomeBarbeiro nome)
+        {
+            return _context.Barbeiros
+                .Any(b => b.TenantId == tenantId && b.Nome == nome);
+        }
+
     }
 }

@@ -2,14 +2,12 @@
 using Barbearia.Application.DTOs.Agendamento;
 using Barbearia.Application.DTOs.Status;
 using Barbearia.Application.Interfaces;
-using Barbearia.Domain.Entities;
 using Barbearia.Domain.Entities.Enums;
 using Barbearia.Domain.Factories;
 using Barbearia.Domain.Inputs;
 using Barbearia.Domain.Repositories;
 using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Exceptions;
-using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
@@ -66,16 +64,6 @@ namespace Barbearia.Application.Services
             var input = _mapper.Map<AgendamentoInput>(request);
             input.SetTenantId(new TenantId(tenantId));
             var agendamento = _agendamentoFactory.CriarAgendamento(input);
-            //var agendamento = _agendamentoFactory.CriarAgendamento(
-            //    tenantId,
-            //    request.ServicoId,
-            //    request.BarbeiroId,
-            //    dataHoraNormalizada,
-            //    request.NomeCliente,
-            //    request.TelefoneCliente,
-            //    AgendamentoStatus.Agendado
-            //    );
-           
 
             _agendamentoRepository.Adicionar(agendamento);
             _agendamentoRepository.Salvar();
@@ -104,7 +92,7 @@ namespace Barbearia.Application.Services
                 var conflito = agendamentos.Any(a =>
                     hora < a.DataHoraAgendada.AddMinutes(a.DuracaoMinutos) &&
                     horaFim > a.DataHoraAgendada);
-
+         
                 if (!conflito)
                     horariosDisponiveis.Add(hora);
             }

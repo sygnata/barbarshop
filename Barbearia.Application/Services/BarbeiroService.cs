@@ -1,7 +1,12 @@
-﻿using Barbearia.Application.DTOs.Barbeiro;
+﻿using AutoMapper;
+using Barbearia.Application.DTOs.Barbeiro;
 using Barbearia.Application.Interfaces;
 using Barbearia.Domain.Entities;
+using Barbearia.Domain.Factories;
+using Barbearia.Domain.Inputs;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
+using Barbearia.Infrastructure.Exceptions;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
@@ -10,21 +15,29 @@ namespace Barbearia.Application.Services
     {
         private readonly BarbeariaDbContext _context;
         private readonly IBarbeiroRepository _barbeiroRepository;
+        private readonly BarbeiroFactory _barbeiroFactory;
+        private readonly IMapper _mapper;
 
-        public BarbeiroService(BarbeariaDbContext context, IBarbeiroRepository barbeiroRepository)
+
+        public BarbeiroService(BarbeariaDbContext context, IBarbeiroRepository barbeiroRepository, BarbeiroFactory barbeiroFactory, IMapper mapper)
         {
             _context = context;
             _barbeiroRepository = barbeiroRepository;
+            _barbeiroFactory = barbeiroFactory;
+            _mapper = mapper;
         }
 
         public BarbeiroResponse AdicionarBarbeiro(Guid tenantId, BarbeiroRequest request)
         {
-            var barbeiro = new Barbeiro
-            {
-                Id = Guid.NewGuid(),
-                TenantId = tenantId,
-                Nome = request.Nome,
-            };
+            // validacao de unicidade
+            if (_barbeiroRepository.ExisteComMesmoNome(tenantId, request.Nome))
+                throw new BusinessException("Já existe um barbeiro com esse nome para o mesmo tenant.");
+
+            var input = _mapper.Map<BarbeiroInput>(request);
+            input.SetTenantId(new TenantId(tenantId));
+            var barbeiro = _barbeiroFactory.CriarBarbeiro(input);
+
+
             _barbeiroRepository.Adicionar(barbeiro);
             _barbeiroRepository.Salvar();
 
