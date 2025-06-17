@@ -1,3 +1,4 @@
+using Barbearia.Application.Configuration;
 using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 using Barbearia.Infrastructure.Persistence.ValueConverters;
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<BarbeariaDbContext>(options =>
 
 builder.Services.AddApplicationServices();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddApplicationMappings();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
