@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Barbearia.Application.DTOs.Barbeiro;
 using Barbearia.Application.Interfaces;
-using Barbearia.Domain.Entities;
 using Barbearia.Domain.Factories;
 using Barbearia.Domain.Inputs;
 using Barbearia.Domain.Repositories;
@@ -11,7 +10,7 @@ using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
-	public class BarbeiroService : IBarbeiroService
+    public class BarbeiroService : IBarbeiroService
     {
         private readonly BarbeariaDbContext _context;
         private readonly IBarbeiroRepository _barbeiroRepository;
@@ -37,15 +36,10 @@ namespace Barbearia.Application.Services
             input.SetTenantId(new TenantId(tenantId));
             var barbeiro = _barbeiroFactory.CriarBarbeiro(input);
 
-
             _barbeiroRepository.Adicionar(barbeiro);
             _barbeiroRepository.Salvar();
 
-            return new BarbeiroResponse
-            {
-                Id = barbeiro.Id,
-                Nome = barbeiro.Nome,
-            };
+            return _mapper.Map<BarbeiroResponse>(barbeiro);
         }
 
         public IEnumerable<BarbeiroResponse> ListarBarbeiros(Guid tenantId)
