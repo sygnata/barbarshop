@@ -12,6 +12,7 @@ namespace Barbearia.Application.Configuration
             {
                 cfg.AddProfile<AgendamentoProfileMapper>();
                 cfg.AddProfile<BarbeiroProfileMapper>();
+                cfg.AddProfile<HorarioDisponivelProfileMapper>();
                 // aqui você pode adicionar outros profiles
             });
 

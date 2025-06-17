@@ -19,5 +19,15 @@ namespace Barbearia.Infrastructure.Repositories
             return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId).ToList();
 
         }
+
+        public bool ExisteConflitoHorario(BarbeiroId barbeiroId, int diaSemana, TimeSpan horaInicio, TimeSpan horaFim)
+        {
+            return _context.HorariosDisponiveis
+                .Any(h =>
+                    h.BarbeiroId == barbeiroId &&
+                    h.DiaSemana == diaSemana &&
+                    horaInicio < h.HoraFim &&
+                    horaFim > h.HoraInicio);
+        }
     }
 }

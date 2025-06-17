@@ -6,21 +6,18 @@ using Barbearia.Domain.Inputs;
 using Barbearia.Domain.Repositories;
 using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Exceptions;
-using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
-    public class BarbeiroService : IBarbeiroService
+	public class BarbeiroService : IBarbeiroService
     {
-        private readonly BarbeariaDbContext _context;
         private readonly IBarbeiroRepository _barbeiroRepository;
         private readonly BarbeiroFactory _barbeiroFactory;
         private readonly IMapper _mapper;
 
 
-        public BarbeiroService(BarbeariaDbContext context, IBarbeiroRepository barbeiroRepository, BarbeiroFactory barbeiroFactory, IMapper mapper)
+        public BarbeiroService(IBarbeiroRepository barbeiroRepository, BarbeiroFactory barbeiroFactory, IMapper mapper)
         {
-            _context = context;
             _barbeiroRepository = barbeiroRepository;
             _barbeiroFactory = barbeiroFactory;
             _mapper = mapper;
