@@ -13,6 +13,7 @@ namespace Barbearia.Infrastructure.Persistence.Configurations
             builder.HasKey(a => a.Id);
             builder.Property(a => a.Id);
             builder.Property(a => a.BarbeiroId).HasGuidConversion();
+            builder.Property(a => a.TenantId).HasGuidConversion();
             builder.Property(a => a.DiaSemana).IsRequired();
             builder.Property(a => a.HoraInicio).IsRequired();
             builder.Property(a => a.HoraInicio).IsRequired();

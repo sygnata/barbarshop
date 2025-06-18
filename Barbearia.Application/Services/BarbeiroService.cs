@@ -79,7 +79,7 @@ namespace Barbearia.Application.Services
         {
             var barbeiro = _barbeiroRepository.ObterPorId(barbeiroId, tenantId, false);
             if (barbeiro == null)
-                throw new BusinessException("Barbeiro não encontrado ou inativo.");
+                throw new BusinessException("Barbeiro não encontrado ou ativo.");
 
             barbeiro.Ativar();
             _barbeiroRepository.Salvar();

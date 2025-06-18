@@ -8,7 +8,7 @@ namespace Barbearia.Domain.Repositories
         void Salvar();
         HorarioDisponivel? ObterPorBarbeiroDia(BarbeiroId barbeiroId, int diaSemana);
         void Adicionar(HorarioDisponivel horarioDisponivel);
-        List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId);
+        List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId, TenantId tenantId);
         bool ExisteConflitoHorario(BarbeiroId barbeiroId, int diaSemana, TimeSpan horaInicio, TimeSpan horaFim);
     }
 

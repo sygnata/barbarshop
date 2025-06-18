@@ -14,9 +14,9 @@ namespace Barbearia.Infrastructure.Repositories
             return _context.HorariosDisponiveis.FirstOrDefault(h => h.BarbeiroId == barbeiroId && h.DiaSemana == diaSemana && h.Ativo);
         }
 
-        public List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId)
+        public List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId, TenantId tenantId)
         { 
-            return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId && wh.Ativo).ToList();
+            return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId && wh.TenantId == tenantId && wh.Ativo).ToList();
 
         }
 
