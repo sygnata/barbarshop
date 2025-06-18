@@ -10,6 +10,12 @@ namespace Barbearia.Domain.Entities
         public string Email { get; set; }
         public string SenhaHash { get; set; }
         public string Perfil { get; set; } // ADMIN ou FUNCIONARIO
+        public bool Ativo { get; private set; } = true;
+
+        public void Inativar()
+        {
+            Ativo = false;
+        }
     }
 
 }

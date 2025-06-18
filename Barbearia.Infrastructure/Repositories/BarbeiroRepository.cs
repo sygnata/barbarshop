@@ -21,5 +21,9 @@ namespace Barbearia.Infrastructure.Repositories
                 .Any(b => b.TenantId == tenantId && b.Nome == nome);
         }
 
+        public Barbeiro ObterPorId(BarbeiroId barbeiroId, TenantId tenantId)
+        { 
+            return _context.Barbeiros.Where(wh => wh.Id == barbeiroId && wh.TenantId == tenantId && wh.Ativo).FirstOrDefault();
+        }
     }
 }

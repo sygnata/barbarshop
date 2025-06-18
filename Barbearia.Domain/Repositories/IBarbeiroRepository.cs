@@ -7,7 +7,9 @@ namespace Barbearia.Domain.Repositories
     {
         void Adicionar(Barbeiro barbeiro);
         void Salvar();
+        void Atualizar(Barbeiro barbeiro);
         IEnumerable<Barbeiro> ListarBarbeiros(TenantId tenantId);
         bool ExisteComMesmoNome(TenantId tenantId, NomeBarbeiro nome);
+        Barbeiro ObterPorId(BarbeiroId barbeiroId, TenantId tenantId);
     }
 }

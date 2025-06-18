@@ -6,5 +6,6 @@ namespace Barbearia.Application.Interfaces
     {
         BarbeiroResponse AdicionarBarbeiro(Guid tenantId, BarbeiroRequest request);
         IEnumerable<BarbeiroResponse> ListarBarbeiros(Guid tenantId);
+        void AtualizarBarbeiro(Guid tenantId, Guid barbeiroId, BarbeiroRequest request);
     }
 }

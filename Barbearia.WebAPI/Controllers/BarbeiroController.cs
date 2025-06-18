@@ -34,4 +34,12 @@ public class BarbeiroController : ControllerBase
         var response = _barbeiroService.ListarBarbeiros(tenantId);
         return Ok(response);
     }
+
+    [HttpPut("{barbeiroId}")]
+    [Authorize]
+    public IActionResult Atualizar(Guid barbeiroId, [FromQuery] Guid tenantId, [FromBody] BarbeiroRequest request)
+    {
+        _barbeiroService.AtualizarBarbeiro(tenantId, barbeiroId, request);
+        return NoContent();
+    }
 }

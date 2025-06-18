@@ -14,5 +14,11 @@ namespace Barbearia.Domain.Entities
         public int DiaSemana { get; set; } // 0=Domingo, 6=Sábado
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFim { get; set; }
+        public bool Ativo { get; private set; } = true;
+
+        public void Inativar()
+        {
+            Ativo = false;
+        }
     }
 }

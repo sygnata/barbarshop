@@ -32,7 +32,8 @@ namespace Barbearia.Infrastructure.Repositories
                   .Where(a =>
                     a.TenantId == tenantId &&
                     a.BarbeiroId == barbeiroId &&
-                    a.Status == AgendamentoStatus.Agendado
+                    a.Status == AgendamentoStatus.Agendado &&
+                    a.Ativo
                 ).ToList();
             // Agora processamos em memória (LINQ sobre objetos)
             return agendamento
@@ -54,7 +55,7 @@ namespace Barbearia.Infrastructure.Repositories
 
         public Agendamento? ObterPorId(Guid agendamentoId, TenantId tenantId)
         {
-            return _context.Agendamentos.FirstOrDefault(a => a.Id == agendamentoId && a.TenantId == tenantId);
+            return _context.Agendamentos.FirstOrDefault(a => a.Id == agendamentoId && a.TenantId == tenantId && a.Ativo);
 
         }
         public IEnumerable<(DateTime DataHoraAgendada, int DuracaoMinutos)> ObterAgendamentosComServico(TenantId tenantId, BarbeiroId barbeiroId, DateTime dataReferencia)

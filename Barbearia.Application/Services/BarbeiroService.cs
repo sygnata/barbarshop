@@ -46,5 +46,22 @@ namespace Barbearia.Application.Services
 
             return barbeiro;
         }
+
+        public void AtualizarBarbeiro(Guid tenantId, Guid barbeiroId, BarbeiroRequest request)
+        {
+            var barbeiro = _barbeiroRepository.ObterPorId(barbeiroId, tenantId);
+
+            if (barbeiro == null)
+                throw new BusinessException("Barbeiro não encontrado ou inativo.");
+
+            if (_barbeiroRepository.ExisteComMesmoNome(tenantId, request.Nome))
+                throw new BusinessException("Já existe um barbeiro com esse nome para o mesmo tenant.");
+
+            //barbeiro.AtualizarNome(new NomeBarbeiro(request.Nome));
+            barbeiro.Nome = request.Nome;
+
+            _barbeiroRepository.Atualizar(barbeiro);
+            _barbeiroRepository.Salvar();
+        }
     }
 }
