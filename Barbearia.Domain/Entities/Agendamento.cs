@@ -19,5 +19,10 @@ namespace Barbearia.Domain.Entities
         {
             Ativo = false;
         }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
     }
 }

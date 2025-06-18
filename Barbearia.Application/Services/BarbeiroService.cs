@@ -63,5 +63,26 @@ namespace Barbearia.Application.Services
             _barbeiroRepository.Atualizar(barbeiro);
             _barbeiroRepository.Salvar();
         }
+
+        public void Inativar(Guid barbeiroId, Guid tenantId)
+        {
+            var barbeiro = _barbeiroRepository.ObterPorId(barbeiroId, tenantId);
+            if (barbeiro == null)
+                throw new BusinessException("Barbeiro não encontrado ou inativo.");
+
+            barbeiro.Inativar();
+            _barbeiroRepository.Salvar();
+        }
+
+
+        public void Ativar(Guid barbeiroId, Guid tenantId)
+        {
+            var barbeiro = _barbeiroRepository.ObterPorId(barbeiroId, tenantId, false);
+            if (barbeiro == null)
+                throw new BusinessException("Barbeiro não encontrado ou inativo.");
+
+            barbeiro.Ativar();
+            _barbeiroRepository.Salvar();
+        }
     }
 }

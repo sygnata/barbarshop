@@ -15,6 +15,17 @@ namespace Barbearia.Domain.Entities
         public DescricaoServico Descricao { get; set; }//VALUEOBJECT
         public int DuracaoMinutos { get; set; }
         public decimal Preco { get; set; }//VALUEOBJECT
+        public bool Ativo { get; private set; } = true;
+
+        public void Inativar()
+        {
+            Ativo = false;
+        }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
     }
 
 }
