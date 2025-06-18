@@ -1,4 +1,5 @@
 ﻿using Barbearia.Domain.Entities;
+using Barbearia.Domain.ValueObjects;
 
 namespace Barbearia.Domain.Repositories
 {
@@ -6,6 +7,7 @@ namespace Barbearia.Domain.Repositories
     {
         void Adicionar(Barbeiro barbeiro);
         void Salvar();
-        IEnumerable<Barbeiro> ListarBarbeiros(Guid tenantId);
+        IEnumerable<Barbeiro> ListarBarbeiros(TenantId tenantId);
+        bool ExisteComMesmoNome(TenantId tenantId, NomeBarbeiro nome);
     }
 }

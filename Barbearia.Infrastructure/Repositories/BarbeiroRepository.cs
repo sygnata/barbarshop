@@ -1,5 +1,6 @@
 ﻿using Barbearia.Domain.Entities;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
@@ -9,10 +10,16 @@ namespace Barbearia.Infrastructure.Repositories
         public BarbeiroRepository(BarbeariaDbContext context) : base(context) { }
 
 
-        public IEnumerable<Barbeiro> ListarBarbeiros(Guid tenantId)
+        public IEnumerable<Barbeiro> ListarBarbeiros(TenantId tenantId)
         {
             return _context.Barbeiros.Where(s => s.TenantId == tenantId).ToList();
         }
-      
+
+        public bool ExisteComMesmoNome(TenantId tenantId, NomeBarbeiro nome)
+        {
+            return _context.Barbeiros
+                .Any(b => b.TenantId == tenantId && b.Nome == nome);
+        }
+
     }
 }

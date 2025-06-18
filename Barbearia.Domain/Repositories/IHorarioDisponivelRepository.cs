@@ -1,13 +1,15 @@
 ﻿using Barbearia.Domain.Entities;
+using Barbearia.Domain.ValueObjects;
 
 namespace Barbearia.Domain.Repositories
 {
     public interface IHorarioDisponivelRepository
     {
         void Salvar();
-        HorarioDisponivel? ObterPorBarbeiroDia(Guid barbeiroId, int diaSemana);
+        HorarioDisponivel? ObterPorBarbeiroDia(BarbeiroId barbeiroId, int diaSemana);
         void Adicionar(HorarioDisponivel horarioDisponivel);
-        List<HorarioDisponivel> ListarPorBarbeiro(Guid barbeiroId);
+        List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId);
+        bool ExisteConflitoHorario(BarbeiroId barbeiroId, int diaSemana, TimeSpan horaInicio, TimeSpan horaFim);
     }
 
 }

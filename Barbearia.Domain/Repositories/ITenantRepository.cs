@@ -1,4 +1,5 @@
 ﻿using Barbearia.Domain.Entities;
+using Barbearia.Domain.ValueObjects;
 
 namespace Barbearia.Domain.Repositories
 {
@@ -6,6 +7,6 @@ namespace Barbearia.Domain.Repositories
     {
         void Salvar();
         void Adicionar(Tenant tenant);
-        Usuario? ObterPorId(Guid tenantId, string email);
+        Usuario? ObterPorId(TenantId tenantId, string email);
     }
 }

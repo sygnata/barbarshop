@@ -1,5 +1,6 @@
 ﻿using Barbearia.Application.Interfaces;
 using Barbearia.Application.Services;
+using Barbearia.Domain.Factories;
 using Barbearia.Domain.Repositories;
 using Barbearia.Infrastructure.Providers;
 using Barbearia.Infrastructure.Repositories;
@@ -28,6 +29,12 @@ namespace DependencyInjection
 			services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
 			services.AddScoped<ITenantRepository, TenantRepository>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			#endregion
+
+			#region FACTORIES
+			services.AddScoped<TenantFactory>();
+			services.AddScoped<AgendamentoFactory>();
+			services.AddScoped<BarbeiroFactory>();
 			#endregion
 
 			#region PROVIDERS

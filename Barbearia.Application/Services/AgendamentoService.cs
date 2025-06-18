@@ -1,11 +1,13 @@
-﻿using Barbearia.Application.DTOs.Agendamento;
+﻿using AutoMapper;
+using Barbearia.Application.DTOs.Agendamento;
 using Barbearia.Application.DTOs.Status;
 using Barbearia.Application.Interfaces;
-using Barbearia.Domain.Entities;
 using Barbearia.Domain.Entities.Enums;
+using Barbearia.Domain.Factories;
+using Barbearia.Domain.Inputs;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Exceptions;
-using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Application.Services
 {
@@ -14,12 +16,16 @@ namespace Barbearia.Application.Services
         private readonly IAgendamentoRepository _agendamentoRepository;
         private readonly IServicoRepository _servicoRepository;
         private readonly IHorarioDisponivelRepository _horarioDisponivelRepository;
+        private readonly AgendamentoFactory _agendamentoFactory;
+        private readonly IMapper _mapper;
 
-        public AgendamentoService(IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository)
+        public AgendamentoService(IAgendamentoRepository agendamentoRepository, IServicoRepository servicoRepository, IHorarioDisponivelRepository horarioDisponivelRepository, AgendamentoFactory agendamentoFactory, IMapper mapper)
         {
             _agendamentoRepository       = agendamentoRepository;
             _servicoRepository           = servicoRepository;
             _horarioDisponivelRepository = horarioDisponivelRepository;
+            _agendamentoFactory = agendamentoFactory;
+            _mapper = mapper;
         }
 
         public void Agendar(Guid tenantId, AgendamentoRequest request)
@@ -29,6 +35,7 @@ namespace Barbearia.Application.Services
             if (dataHoraNormalizada < DateTime.UtcNow.AddMinutes(10))
                 throw new BusinessException("O horário deve ser com pelo menos 10 minutos de antecedência.");
 
+            //var tenant = new TenantId(tenantId);
             var servico = _servicoRepository.ObterPorId(tenantId, request.ServicoId);
             if (servico == null)
                 throw new BusinessException("Serviço não encontrado.");
@@ -54,17 +61,9 @@ namespace Barbearia.Application.Services
                 throw new BusinessException("O horário solicitado não está dentro da jornada do barbeiro.");
 
             //Utilizar AutoMapper
-            var agendamento = new Agendamento
-            {
-                Id = Guid.NewGuid(),
-                TenantId = tenantId,
-                ServicoId = request.ServicoId,
-                BarbeiroId = request.BarbeiroId,
-                DataHoraAgendada = dataHoraNormalizada,
-                ClienteNome = request.NomeCliente,
-                ClienteTelefone = request.TelefoneCliente,
-                Status = AgendamentoStatus.Agendado
-            };
+            var input = _mapper.Map<AgendamentoInput>(request);
+            input.SetTenantId(new TenantId(tenantId));
+            var agendamento = _agendamentoFactory.CriarAgendamento(input);
 
             _agendamentoRepository.Adicionar(agendamento);
             _agendamentoRepository.Salvar();
@@ -93,7 +92,7 @@ namespace Barbearia.Application.Services
                 var conflito = agendamentos.Any(a =>
                     hora < a.DataHoraAgendada.AddMinutes(a.DuracaoMinutos) &&
                     horaFim > a.DataHoraAgendada);
-
+         
                 if (!conflito)
                     horariosDisponiveis.Add(hora);
             }

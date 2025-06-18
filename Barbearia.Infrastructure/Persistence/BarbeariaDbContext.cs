@@ -1,4 +1,7 @@
 ﻿using Barbearia.Domain.Entities;
+using Barbearia.Domain.ValueObjects;
+using Barbearia.Infrastructure.Persistence.Configurations;
+using Barbearia.Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -23,6 +26,11 @@ namespace Barbearia.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TenantConfiguration).Assembly);
+
+            modelBuilder.ApplyValueObjectConversions();
+
+
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties().Where(p => p.ClrType == typeof(DateTime)))
@@ -32,6 +40,7 @@ namespace Barbearia.Infrastructure.Persistence
                         v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));
                 }
             }
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -46,8 +55,6 @@ namespace Barbearia.Infrastructure.Persistence
             modelBuilder.Entity<Agendamento>()
                  .Property(a => a.DataHoraAgendada)
                  .HasColumnType("timestamp without time zone");
-
-          
         }
     }
 

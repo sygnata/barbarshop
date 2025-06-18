@@ -1,5 +1,6 @@
 ﻿using Barbearia.Domain.Entities;
 using Barbearia.Domain.Repositories;
+using Barbearia.Domain.ValueObjects;
 using Barbearia.Infrastructure.Persistence;
 
 namespace Barbearia.Infrastructure.Repositories
@@ -8,11 +9,11 @@ namespace Barbearia.Infrastructure.Repositories
     {
         public ServicoRepository(BarbeariaDbContext context) : base(context) { }
 
-        public Servico? ObterPorId(Guid tenantId, Guid servicoId)
+        public Servico? ObterPorId(TenantId tenantId, Guid servicoId)
         {
             return _context.Servicos.FirstOrDefault(s => s.Id == servicoId && s.TenantId == tenantId);
         }
-        public IEnumerable<Servico> ListarServicosPorTenant(Guid tenantId)
+        public IEnumerable<Servico> ListarServicosPorTenant(TenantId tenantId)
         {
             return _context.Servicos
            .Where(s => s.TenantId == tenantId)
