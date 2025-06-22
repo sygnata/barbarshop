@@ -10,5 +10,6 @@ namespace Barbearia.Application.Interfaces
     public interface ITenantService
     {
         CreateTenantResponse CriarTenant(CreateTenantRequest request);
+        ConsultaTenantResponse ObterTenant(Guid TenantId);
     }
 }

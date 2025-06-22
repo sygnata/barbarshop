@@ -34,4 +34,29 @@ public class ServicoController : ControllerBase
         var response = _servicoService.ListarServicos(tenantId);
         return Ok(response);
     }
+
+	[HttpPut("{servicoId}")]
+	[Authorize]
+	public IActionResult Atualizar(Guid servicoId, [FromQuery] Guid tenantId, [FromBody] ServicoRequest request)
+	{
+		_servicoService.AtualizarServico(servicoId, tenantId, request);
+		return NoContent();
+	}
+
+    [HttpDelete("{servicoId}/inativar")]
+    [Authorize]
+    public IActionResult Remover(Guid servicoId, [FromQuery] Guid tenantId)
+    {
+        _servicoService.Inativar(servicoId, tenantId);
+        return NoContent();
+    }
+
+    [HttpPatch("{servicoId}/ativar")]
+    [Authorize]
+    public IActionResult Ativar(Guid servicoId, [FromQuery] Guid tenantId)
+    {
+        _servicoService.Ativar(servicoId, tenantId);
+        return NoContent();
+    }
+
 }

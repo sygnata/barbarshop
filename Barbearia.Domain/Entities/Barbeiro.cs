@@ -9,5 +9,16 @@ namespace Barbearia.Domain.Entities
         public NomeBarbeiro Nome { get; set; }
         public string? FotoUrl { get; set; }
         public DescricaoBarbeiro? Descricao { get; set; }
+        public bool Ativo { get; private set; } = true;
+
+        public void Inativar()
+        {
+            Ativo = false;
+        }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
     }
 }

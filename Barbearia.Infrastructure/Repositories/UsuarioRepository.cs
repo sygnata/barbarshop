@@ -12,7 +12,7 @@ namespace Barbearia.Infrastructure.Repositories
 
         public Usuario? ObterPorId(TenantId tenantId, string email)
         {
-            return _context.Usuarios.FirstOrDefault(s => s.Email == email && s.TenantId == tenantId);
+            return _context.Usuarios.FirstOrDefault(s => s.Email == email && s.TenantId == tenantId && s.Ativo);
         }
       
     }

@@ -34,4 +34,28 @@ public class BarbeiroController : ControllerBase
         var response = _barbeiroService.ListarBarbeiros(tenantId);
         return Ok(response);
     }
+
+    [HttpPut("{barbeiroId}")]
+    [Authorize]
+    public IActionResult Atualizar(Guid barbeiroId, [FromQuery] Guid tenantId, [FromBody] BarbeiroRequest request)
+    {
+        _barbeiroService.AtualizarBarbeiro(tenantId, barbeiroId, request);
+        return NoContent();
+    }
+
+    [HttpDelete("{barbeiroId}/inativar")]
+    [Authorize]
+    public IActionResult Remover(Guid barbeiroId, [FromQuery] Guid tenantId)
+    {
+        _barbeiroService.Inativar(barbeiroId, tenantId);
+        return NoContent();
+    }
+
+    [HttpPatch("{barbeiroId}/ativar")]
+    [Authorize]
+    public IActionResult Ativar(Guid barbeiroId, [FromQuery] Guid tenantId)
+    {
+        _barbeiroService.Ativar(barbeiroId, tenantId);
+        return NoContent();
+    }
 }

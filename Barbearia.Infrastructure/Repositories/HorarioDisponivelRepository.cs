@@ -11,12 +11,12 @@ namespace Barbearia.Infrastructure.Repositories
 
         public HorarioDisponivel? ObterPorBarbeiroDia(BarbeiroId barbeiroId, int diaSemana)
         {
-            return _context.HorariosDisponiveis.FirstOrDefault(h => h.BarbeiroId == barbeiroId && h.DiaSemana == diaSemana);
+            return _context.HorariosDisponiveis.FirstOrDefault(h => h.BarbeiroId == barbeiroId && h.DiaSemana == diaSemana && h.Ativo);
         }
 
-        public List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId)
+        public List<HorarioDisponivel> ListarPorBarbeiro(BarbeiroId barbeiroId, TenantId tenantId)
         { 
-            return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId).ToList();
+            return _context.HorariosDisponiveis.Where(wh => wh.BarbeiroId == barbeiroId && wh.TenantId == tenantId && wh.Ativo).ToList();
 
         }
 

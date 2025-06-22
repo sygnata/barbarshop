@@ -21,4 +21,16 @@ public class TenantController : ControllerBase
         var result = _tenantService.CriarTenant(request);
         return Ok(result);
     }
+
+    [HttpGet("config")]
+    public IActionResult ObterConfiguracoes([FromQuery] Guid tenantId)
+    {
+        var tenant = _tenantService.ObterTenant(tenantId);
+        if (tenant == null)
+            return NotFound();
+
+      
+
+        return Ok(tenant);
+    }
 }

@@ -13,5 +13,16 @@ namespace Barbearia.Domain.Entities
         public string ClienteNome { get; set; }
         public Telefone ClienteTelefone { get; set; }
         public AgendamentoStatus Status { get; set; } // AGENDADO, CANCELADO, CONCLUIDO
+        public bool Ativo { get; private set; } = true;
+
+        public void Inativar()
+        {
+            Ativo = false;
+        }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
     }
 }

@@ -7,7 +7,9 @@ namespace Barbearia.Domain.Repositories
 	{
 		void Adicionar(Servico servico);
 		void Salvar();
-		Servico? ObterPorId(TenantId tenantId, Guid servicoId);
+		void Atualizar(Servico servico);
+		void Remover(Servico servico);
+		Servico? ObterPorId(TenantId tenantId, Guid servicoId, bool ativo = true);
 		IEnumerable<Servico>? ListarServicosPorTenant(TenantId tenantId);
 	}
 

@@ -12,7 +12,7 @@ namespace Barbearia.Infrastructure.Repositories
 
         public IEnumerable<Barbeiro> ListarBarbeiros(TenantId tenantId)
         {
-            return _context.Barbeiros.Where(s => s.TenantId == tenantId).ToList();
+            return _context.Barbeiros.Where(s => s.TenantId == tenantId && s.Ativo).ToList();
         }
 
         public bool ExisteComMesmoNome(TenantId tenantId, NomeBarbeiro nome)
@@ -21,5 +21,9 @@ namespace Barbearia.Infrastructure.Repositories
                 .Any(b => b.TenantId == tenantId && b.Nome == nome);
         }
 
+        public Barbeiro ObterPorId(BarbeiroId barbeiroId, TenantId tenantId, bool ativo = true)
+        { 
+            return _context.Barbeiros.Where(wh => wh.Id == barbeiroId && wh.TenantId == tenantId && wh.Ativo == ativo).FirstOrDefault();
+        }
     }
 }

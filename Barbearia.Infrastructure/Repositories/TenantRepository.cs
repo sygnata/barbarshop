@@ -14,6 +14,11 @@ namespace Barbearia.Infrastructure.Repositories
         {
             return _context.Usuarios.FirstOrDefault(s => s.Email == email && s.TenantId == tenantId);
         }
-      
+
+        public Tenant? ObterTenant(Guid tenantId)
+        {
+            return _context.Tenants.FirstOrDefault(s => s.Id == tenantId);
+        }
+
     }
 }

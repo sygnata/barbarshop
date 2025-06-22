@@ -36,7 +36,7 @@ namespace Barbearia.Application.Services
 
         public IEnumerable<HorarioDisponivelResponse> ListarPorBarbeiro(Guid tenantId, Guid barbeiroId)
         {
-            var barbeiros =  _horarioDisponivelRepository.ListarPorBarbeiro(barbeiroId)
+            var barbeiros =  _horarioDisponivelRepository.ListarPorBarbeiro(barbeiroId, tenantId)
                 .Select(h => new HorarioDisponivelResponse
                 {
                     Id = h.Id,

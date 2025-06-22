@@ -20,5 +20,14 @@ namespace Barbearia.Infrastructure.Repositories
         {
             _context.Set<T>().Add(entity);
         }
+
+        public void Atualizar(T entity)
+        {
+            _context.Set<T>().Update(entity);
+        }
+        public void Remover(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
     }
 }

@@ -41,5 +41,20 @@ namespace Barbearia.Application.Services
                 UsuarioAdminId = usuario.Id
             };
         }
+
+        public ConsultaTenantResponse ObterTenant(Guid tenantId)
+        {
+            var tenant = _tenantRepository.ObterTenant(tenantId);
+
+            var response = new ConsultaTenantResponse
+            {
+                NomeFantasia = tenant.NomeFantasia,
+                LogoUrl = tenant.LogoUrl,
+                CorPrimaria = tenant.CorPrimaria,
+                DominioCustomizado = tenant.DominioCustomizado
+            };
+
+            return response;
+        }
     }
 }

@@ -9,9 +9,9 @@ namespace Barbearia.Infrastructure.Repositories
     {
         public ServicoRepository(BarbeariaDbContext context) : base(context) { }
 
-        public Servico? ObterPorId(TenantId tenantId, Guid servicoId)
+        public Servico? ObterPorId(TenantId tenantId, Guid servicoId, bool ativo = true)
         {
-            return _context.Servicos.FirstOrDefault(s => s.Id == servicoId && s.TenantId == tenantId);
+            return _context.Servicos.FirstOrDefault(s => s.Id == servicoId && s.TenantId == tenantId && s.Ativo == ativo);
         }
         public IEnumerable<Servico> ListarServicosPorTenant(TenantId tenantId)
         {
@@ -19,5 +19,6 @@ namespace Barbearia.Infrastructure.Repositories
            .Where(s => s.TenantId == tenantId)
            .ToList();
         }
+    
     }
 }
