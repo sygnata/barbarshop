@@ -8,5 +8,6 @@ namespace Barbearia.Domain.Repositories
         void Salvar();
         void Adicionar(Tenant tenant);
         Usuario? ObterPorId(TenantId tenantId, string email);
+        Tenant? ObterTenant(Guid tenantId);
     }
 }
