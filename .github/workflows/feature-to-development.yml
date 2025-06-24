@@ -21,4 +21,4 @@ jobs:
           title: 'Feature para Development: ${{ github.ref_name }}'
           body: 'PR automático criado a partir da branch ${{ github.ref_name }}'
           create-when-empty: true
-          commit-message: '' # não necessário pois não vai comitar
+          create-only: true        
