@@ -51,6 +51,7 @@ public class BarbeiroController : ControllerBase
         return NoContent();
     }
 
+
     [HttpPatch("{barbeiroId}/ativar")]
     [Authorize]
     public IActionResult Ativar(Guid barbeiroId, [FromQuery] Guid tenantId)
