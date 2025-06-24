@@ -1,0 +1,25 @@
+name: Develop PR to Master
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.message != 'chore: PR automático da develop para master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request to Master
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: PR automático da develop para master'
+          title: 'Develop para Master'
+          body: 'PR automático criado após merge em develop'
+          base: master
+          branch: develop
+          delete-branch: false
