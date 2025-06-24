@@ -43,6 +43,7 @@ public class BarbeiroController : ControllerBase
         return NoContent();
     }
 
+
     [HttpDelete("{barbeiroId}/inativar")]
     [Authorize]
     public IActionResult Remover(Guid barbeiroId, [FromQuery] Guid tenantId)
