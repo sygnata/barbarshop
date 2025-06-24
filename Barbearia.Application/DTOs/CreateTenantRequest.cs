@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Barbearia.Domain.ValueObjects;
 
 namespace Barbearia.Application.DTOs
 {
-    public class CreateTenantRequest
+	public class CreateTenantRequest
     {
-        public string NomeFantasia { get; set; }
+        public NomeFantasia NomeFantasia { get; set; }
         public string EmailAdmin { get; set; }
         public string SenhaAdmin { get; set; }
         public string NomeAdmin { get; set; }
