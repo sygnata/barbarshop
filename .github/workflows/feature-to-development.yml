@@ -1,0 +1,24 @@
+name: Feature PR to Development
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Abrir PR da branch atual para development
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: development
+          branch: ${{ github.ref_name }}
+          title: 'Feature para Development: ${{ github.ref_name }}'
+          body: 'PR automático criado a partir da branch ${{ github.ref_name }}'
+          create-when-empty: true
+          create-only: true        
