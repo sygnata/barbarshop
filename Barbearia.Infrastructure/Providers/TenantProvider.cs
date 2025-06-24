@@ -21,5 +21,6 @@ namespace Barbearia.Infrastructure.Providers
 
             return Guid.Parse(tenantIdClaim.Value);
         }
+
     }
 }
