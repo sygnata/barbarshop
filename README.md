@@ -1,4 +1,4 @@
-# Barbearia Pro TESTE
+# Barbearia Pro TESTE FLOW
 
 Projeto de sistema SaaS para agendamento e gerenciamento de barbearias.
 
