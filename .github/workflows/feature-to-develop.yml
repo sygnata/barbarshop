@@ -1,4 +1,4 @@
-name: Feature PR to Develop
+name: Feature PR to Development
 
 on:
   push:
@@ -12,13 +12,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create Pull Request to Develop
+      - name: Create Pull Request to Development
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore: PR automático da feature para develop'
-          title: 'Feature para Develop: ${{ github.ref_name }}'
+          commit-message: 'chore: PR automático da feature para development'
+          title: 'Feature para Development: ${{ github.ref_name }}'
           body: 'PR automático criado a partir da branch ${{ github.ref_name }}'
-          base: develop
+          base: development
           branch: ${{ github.ref_name }}
           delete-branch: false
